@@ -54,15 +54,15 @@ public class CanvasPane extends Pane {
 		graphicsContext.setStroke(strokeColor);
 	}
 	
-	public void fill(RenderableObject obj) {
+	public void fill(RenderableEntity obj) {
 		fill(obj, obj.getColor());
 	}
 	
-	public void stroke(RenderableObject obj) {
+	public void stroke(RenderableEntity obj) {
 		stroke(obj, obj.getStrokeColor());
 	}
 	
-	public void fill(RenderableObject obj, Color fillColor) {
+	public void fill(RenderableEntity obj, Color fillColor) {
 		graphicsContext.setFill(getColor(fillColor));
 		
 		if (obj instanceof Rectangle) {
@@ -80,7 +80,7 @@ public class CanvasPane extends Pane {
 		}
 	}
 	
-	public void stroke(RenderableObject obj, Color strokeColor) {
+	public void stroke(RenderableEntity obj, Color strokeColor) {
 		graphicsContext.setStroke(getColor(strokeColor));
 		
 		if (obj instanceof Rectangle) {

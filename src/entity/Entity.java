@@ -4,7 +4,7 @@ import java.util.Random;
 
 import utils.Vec2d;
 
-public abstract class Entity implements graphics.render.RenderableObject {
+public abstract class Entity implements graphics.render.RenderableEntity {
 	
 	public static final Random RANDOM = new Random();
 	

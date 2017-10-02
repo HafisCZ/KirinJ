@@ -1,153 +1,117 @@
-import graphics.render.CompositeRenderableObject;
-import graphics.render.MoveableObject;
-import graphics.render.RenderableObject;
+import graphics.render.Canvas;
+import graphics.render.CompositeEntity;
+import graphics.render.MoveableEntity;
+import graphics.render.RenderableEntity;
 import graphics.shapes.Arc;
 import graphics.shapes.Ellipse;
 import utils.Colors;
 import utils.Direction8;
 
+public class Pacman implements CompositeEntity, MoveableEntity {
 
-/*******************************************************************************
- * Kozusznik Jan
- * Copyright (c) 2014 All Right Reserved, http://www.kozusznik.cz
- *
- * This file is subject to the terms and conditions defined in
- * file 'LICENSE.txt', which is part of this source code package.
- ******************************************************************************/
+	private static final Canvas CANVAS = Canvas.getInstance();
+	
+	private static final double SIZE = 30, SIZE_OF_EYE_PORTION = 0.15, ANGLE = 40;
+	
+	private double x, y;
+	private Direction8 direction;
+	private RenderableEntity[] entities = new RenderableEntity[2]; 
+	
+	public Pacman(int x, int y, Direction8 direction) {
+		this.x = x;
+		this.y = y;
+		this.direction = direction;
+		entities[0] = new Arc(x, y, SIZE, SIZE, Colors.YELLOW_BRIGHT, direction.celemVzad(), 360 - ANGLE, true);
+		entities[1] = new Ellipse(getEyeX(), getEyeY(), SIZE_OF_EYE_PORTION * SIZE);
+	}
 
-/**
- * @author Jan Kožusznik
- * @version 0.1
- */
-public class Pacman implements CompositeRenderableObject, MoveableObject {
+	public Direction8 getDirection() {
+		return this.direction;
+	}
 
-  private static final int SIZE = 30;
-
-  private static final double SIZE_OF_EYE_PORTION = 0.15;
-
-  private static final int ANGLE = 40;
-
-  private Direction8 direction;
-
-  private Ellipse eye;
-  private Arc head;
-  
-  private int x, y;
-
-  public Pacman(int x, int y, Direction8 direction) {
-    this.x = x;
-    this.y = y;
-    this.direction = direction;
-    this.head = new Arc(x, y, SIZE, SIZE, Colors.YELLOW_BRIGHT, direction.celemVzad(), computeAngle(), true);
-    this.eye = new Ellipse(getEyeX(), getEyeY(), getEyeSize(), getEyeSize(), Colors.BLACK);
-    draw();
-  }
-  
-  public Direction8 getDirection() {
-	  return this.direction;
-  }
-
-  public void setDirection(Direction8 direction8) {
-    this.direction = direction8;
-    //this.head.setDirection(direction.celemVzad());
-    //this.eye.setPosition(getEyeX(), getEyeY());
-  }
-  
-  public void setX(double x) {
-	  setPosition(x, this.y);
-  }
-  
-  public double getX() {
-	  return this.x;
-  }
-  
-  public double getY() {
-	  return this.y;
-  }
-  
-  public void setY(double y) {
-	  setPosition(this.x, y);
-  }
-
-  public void moveX(double step) {
-    setPosition(this.x + step, this.y);
-  }
-
-  public void moveY(double step) {
-    setPosition(this.x, this.y + step);
-  }
-
-  private int getEyeSize() {
-    return (int) getEyeSizeD();
-  }
-
-  private double getEyeSizeD() {
-    return SIZE_OF_EYE_PORTION * SIZE;
-  }
-
-  private int computeAngle() {
-    return 360 - ANGLE;
-  }
-
-  private int getEyeX() {
-    switch (this.direction) {
-      case EAST:
-        return (int) (this.x + SIZE / 2 - getEyeSize() / 2 + getEyeSize() / 4);
-      case WEST:
-        return (int) (this.x + SIZE - getEyeSize() - SIZE / 2 + getEyeSize() / 2
-            - getEyeSize() / 4);
-      case NORTH:
-      case SOUTH:
-        return (int) (this.x + SIZE / 4);
-      default:
-        return 0;
-    }
-
-  }
-
-  private int getEyeY() {
-    switch (this.direction) {
-      case EAST:
-      case WEST:
-        return (int) (this.y + SIZE / 4);
-      case NORTH:
-        return (int) (this.y + SIZE - getEyeSize() - SIZE / 2 + getEyeSize() / 2
-            - getEyeSize() / 4);
-      case SOUTH:
-        return (int) (this.y + SIZE / 2 - getEyeSize() / 2 + getEyeSize() / 4);
-      default:
-        return 0;
-    }
-
-  }
-
-	public double getWidth() {
-		return SIZE;
+	public void setDirection(Direction8 direction) {
+		this.direction = direction;
+		update();
 	}
 	
-	public double getHeight() {
-		return SIZE;
+	private void update() {
+		((Arc) entities[0]).setPosition(this.x, this.y);
+		((Arc) entities[0]).setDirection(direction.celemVzad());
+		((Ellipse) entities[1]).setPosition(getEyeX(), getEyeY());
 	}
 	
-	public RenderableObject[] getObjects() {
-		return new RenderableObject[]{this.head, this.eye};
+	public void setX(double x) {
+		this.x = x;
+		update();
+	}
+  
+    public double getX() {
+	    return this.x;
+    }
+
+    public void setY(double y) {
+    	this.y = y;
+    	update();
+    }
+    
+    public double getY() {
+	    return this.y;
+    }
+ 
+	public void moveX(double dx) {
+		this.x += dx;
+		update();
+	}
+	
+	public void moveY(double dy) {
+		this.y += dy;
+		update();
+	}
+    
+    private double getEyeX() {
+    	switch(this.direction) {
+    		case EAST:
+    			return (this.x + SIZE / 2 - SIZE_OF_EYE_PORTION * SIZE / 2 + SIZE_OF_EYE_PORTION * SIZE / 4);
+    		case WEST:
+    			return (this.x + SIZE - SIZE_OF_EYE_PORTION * SIZE - SIZE / 2 + SIZE_OF_EYE_PORTION * SIZE / 2 - SIZE_OF_EYE_PORTION * SIZE / 4);
+    		case NORTH:
+    		case SOUTH:
+    			return (this.x + SIZE / 4);
+    		default:
+    			return 0;
+    	}
+    }
+	
+    private double getEyeY() {
+    	switch(this.direction) {
+	    	case EAST:
+	    	case WEST:
+	    		return (this.y + SIZE / 4);
+	    	case NORTH:
+	    		return (this.y + SIZE - SIZE_OF_EYE_PORTION * SIZE - SIZE / 2 + SIZE_OF_EYE_PORTION * SIZE / 2 - SIZE_OF_EYE_PORTION * SIZE / 4);
+	    	case SOUTH:
+	    		return (this.y + SIZE / 2 - SIZE_OF_EYE_PORTION * SIZE / 2 + SIZE_OF_EYE_PORTION * SIZE / 4);
+    		default:
+    			return 0;
+    	}
+    }
+	
+	public RenderableEntity[] getObjects() {
+		return this.entities;
 	}
 	
 	public Pacman draw() {
-		CANVAS.fill(this.head);
-		CANVAS.stroke(this.head);
-		CANVAS.fill(this.eye);
+		CANVAS.fill(entities[0]);
+		CANVAS.stroke(entities[0]);
+		CANVAS.fill(entities[1]);
 		return this;
 	}
 
 	public void setWidth(double width) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setHeight(double height) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
-	
 }

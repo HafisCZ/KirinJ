@@ -3,10 +3,10 @@ package graphics.shapes;
 import java.awt.Color;
 
 import graphics.render.Canvas;
-import graphics.render.MoveableObject;
-import graphics.render.RenderableObject;
+import graphics.render.MoveableEntity;
+import graphics.render.RenderableEntity;
 
-public class Ellipse implements RenderableObject, MoveableObject {
+public class Ellipse implements RenderableEntity, MoveableEntity {
 	
 	protected static final Canvas CANVAS = Canvas.getInstance();
 
@@ -59,6 +59,14 @@ public class Ellipse implements RenderableObject, MoveableObject {
 	
 	public void setHeight(double height) {
 		this.height = height;
+	}
+	
+	public void moveX(double dx) {
+		this.x += dx;
+	}
+	
+	public void moveY(double dy) {
+		this.y += dy;
 	}
 
 	public Color getColor() {

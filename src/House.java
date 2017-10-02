@@ -1,14 +1,14 @@
 import java.awt.Color;
 
-import graphics.render.CompositeRenderableObject;
-import graphics.render.RenderableObject;
+import graphics.render.CompositeEntity;
+import graphics.render.RenderableEntity;
 import graphics.shapes.Rectangle;
 import graphics.shapes.Triangle;
 import utils.Colors;
 
-public class House implements CompositeRenderableObject {
+public class House implements CompositeEntity {
 	
-	private RenderableObject[] shps= new RenderableObject[16];
+	private RenderableEntity[] shps= new RenderableEntity[16];
 
 	private Color color1 = Colors.ORANGE_VIBRANT;
 	private Color color2 = Colors.RED_BRIGHT;
@@ -78,7 +78,7 @@ public class House implements CompositeRenderableObject {
 	}
 
 	@Override
-	public RenderableObject[] getObjects() {
+	public RenderableEntity[] getObjects() {
 		return this.shps;
 	}
 

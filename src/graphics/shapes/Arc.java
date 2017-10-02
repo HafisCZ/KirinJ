@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import graphics.render.Canvas;
-import graphics.render.MoveableObject;
-import graphics.render.RenderableObject;
+import graphics.render.MoveableEntity;
+import graphics.render.RenderableEntity;
 import utils.Direction8;
 
-public class Arc implements RenderableObject, MoveableObject {
+public class Arc implements RenderableEntity, MoveableEntity {
 	
 	protected static final Canvas CANVAS = Canvas.getInstance();
 	
@@ -40,7 +40,7 @@ public class Arc implements RenderableObject, MoveableObject {
 		this.color1 = color;
 		this.stroked = stroked;
 	}
-	  
+	
 	public double getX() {
 		return this.x;
 	}
@@ -73,12 +73,24 @@ public class Arc implements RenderableObject, MoveableObject {
 		this.height = height;
 	}
 	
+	public void moveX(double dx) {
+		this.x += dx;
+	}
+	
+	public void moveY(double dy) {
+		this.y += dy;
+	}
+	
 	public Color getColor() {
 		return this.color1;
 	}
 	
 	public Direction8 getDirection() {
 		return this.direction;
+	}
+	
+	public void setDirection(Direction8 direction) {
+		this.direction = direction;
 	}
 	
 	public double getAngleStart() {

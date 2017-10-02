@@ -74,11 +74,11 @@ public class Canvas extends Application implements Runnable {
 		canvasPane.clear();
 	}
 	
-	public void fill(RenderableObject obj) {
+	public void fill(RenderableEntity obj) {
 		canvasPane.fill(obj);
 	}
 	
-	public void stroke(RenderableObject obj) {
+	public void stroke(RenderableEntity obj) {
 		canvasPane.stroke(obj);
 	}
 	

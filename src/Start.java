@@ -4,13 +4,13 @@ import java.util.List;
 import entity.Bug;
 import entity.Entity;
 import entity.Light;
-import graphics.render.RenderBatch;
+import graphics.render.RenderHandler;
 
 public class Start {
 	
 	public static void main(String[] args) {		
 		
-		RenderBatch batch = new RenderBatch(graphics.render.Canvas.getInstance());
+		RenderHandler batch = new RenderHandler(graphics.render.Canvas.getInstance());
 
 		List<Entity> entities = new ArrayList<Entity>();
 		for (int i = 0; i < 50; i++) {
@@ -23,16 +23,6 @@ public class Start {
 		for (Entity entity : entities) {
 			batch.add(entity);
 		}
-		
-		// T
-		Pacman p = new Pacman(300, 300, utils.Direction8.WEST);
-		p.draw();
-		try {
-			Thread.sleep(10007);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// T
 		
 		long previousMS = System.currentTimeMillis();
 		while (true) {
