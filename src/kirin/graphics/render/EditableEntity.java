@@ -1,6 +1,9 @@
-package graphics.render;
+package kirin.graphics.render;
 
-public interface MoveableEntity {
+/**
+ * Interface for objects with editable position / dimensions
+ */
+public interface EditableEntity {
 
 	public void setX(double x);
 	public void setY(double y);

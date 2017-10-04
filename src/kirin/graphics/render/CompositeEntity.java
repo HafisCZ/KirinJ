@@ -1,4 +1,4 @@
-package graphics.render;
+package kirin.graphics.render;
 
 public interface CompositeEntity extends RenderableEntity {
 
