@@ -3,12 +3,14 @@ package kirin.input;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import kirin.graphics.Canvas;
+import kirin.input.adapter.KeyEventAdapter;
+import kirin.input.adapter.MouseEventAdapter;
 
 @SuppressWarnings("restriction")
 public class InputHandler {
 	
 	private KeyEventAdapter adapter;
-	private MouseAdapter mouseAdapter;
+	private MouseEventAdapter mouseAdapter;
 	
 	public InputHandler(Canvas canvas) {
 		this.adapter = canvas.getKeyAdapter();
@@ -19,38 +21,29 @@ public class InputHandler {
 		return adapter.isHeld(key);
 	}
 	
-	public boolean isKeyHeld(String key) {
-		return adapter.isHeld(KeyCode.getKeyCode(key));
-	}
-	
 	public boolean isKeyPressed(KeyCode key) {
 		return adapter.isPressed(key);
 	}
-	
-	public boolean isKeyPressed(String key) {
-		return adapter.isPressed(KeyCode.getKeyCode(key));
-	}
-	
+
 	public boolean isMouseButtonHeld(MouseButton key) {
 		return mouseAdapter.isHeld(key);
 	}
-	
-	public boolean isMouseButtonHeld(String key) {
-		return mouseAdapter.isHeld(MouseButton.valueOf(key));
-	}
-	
+
 	public boolean isMouseButtonPressed(MouseButton key) {
 		return mouseAdapter.isPressed(key);
 	}
-	
-	public boolean isMouseButtonPressed(String key) {
-		return mouseAdapter.isPressed(MouseButton.valueOf(key));
+
+	public double getLastMouseX() {
+		return mouseAdapter.lastX();
 	}
 	
-	public void updateKeyEventAdapter() {
+	public double getLastMouseY() {
+		return mouseAdapter.lastY();
+	}
+
+	public void updateAdapters() {
 		this.adapter.update();
 		this.mouseAdapter.update();
 	}
-	
 	
 }

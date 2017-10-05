@@ -6,11 +6,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcType;
-import kirin.graphics.render.RenderableEntity;
-import kirin.graphics.shapes.Arc;
-import kirin.graphics.shapes.Ellipse;
-import kirin.graphics.shapes.Rectangle;
-import kirin.graphics.shapes.Triangle;
+
+import kirin.graphics.shape.Arc;
+import kirin.graphics.shape.Ellipse;
+import kirin.graphics.shape.Rectangle;
+import kirin.graphics.shape.Shape;
+import kirin.graphics.shape.Triangle;
 
 @SuppressWarnings("restriction")
 public class CanvasPane extends Pane {
@@ -43,27 +44,18 @@ public class CanvasPane extends Pane {
 	}
 
 	public void clear() {
-		Paint fillColor = graphicsContext.getFill();
-		Paint strokeColor = graphicsContext.getStroke();
-		
-		graphicsContext.setFill(getColor(backgroundColor));
-		graphicsContext.setStroke(getColor(backgroundColor));
-		
-		graphicsContext.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		
-		graphicsContext.setFill(fillColor);
-		graphicsContext.setStroke(strokeColor);
+		graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 	
-	public void fill(RenderableEntity obj) {
-		fill(obj, obj.getColor());
+	public void fill(Shape obj) {
+		fill(obj, obj.getFill());
 	}
 	
-	public void stroke(RenderableEntity obj) {
-		stroke(obj, obj.getStrokeColor());
+	public void stroke(Shape obj) {
+		stroke(obj, obj.getStroke());
 	}
 	
-	public void fill(RenderableEntity obj, Color fillColor) {
+	public void fill(Shape obj, Color fillColor) {
 		graphicsContext.setFill(getColor(fillColor));
 		
 		if (obj instanceof Rectangle) {
@@ -81,7 +73,7 @@ public class CanvasPane extends Pane {
 		}
 	}
 	
-	public void stroke(RenderableEntity obj, Color strokeColor) {
+	public void stroke(Shape obj, Color strokeColor) {
 		graphicsContext.setStroke(getColor(strokeColor));
 		
 		if (obj instanceof Rectangle) {

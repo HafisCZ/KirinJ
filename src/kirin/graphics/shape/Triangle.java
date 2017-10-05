@@ -1,18 +1,11 @@
-package kirin.graphics.shapes;
+package kirin.graphics.shape;
 
 import java.awt.Color;
 
-import kirin.graphics.Canvas;
-import kirin.graphics.render.EditableEntity;
-import kirin.graphics.render.RenderableEntity;
-import kirin.utils.math.Direction;
+import kirin.util.math.Direction;
 
-public class Triangle implements RenderableEntity, EditableEntity {
+public class Triangle extends Shape {
 
-	protected static final Canvas CANVAS = Canvas.getInstance();
-  
-	protected double x, y, width, height;
-	protected Color color;
 	protected Direction direction;
 
 	public Triangle(double x, double y, double width, double height) {
@@ -28,60 +21,12 @@ public class Triangle implements RenderableEntity, EditableEntity {
 	}
 	
 	public Triangle(double x, double y, double width, double height, Color color, Direction direction) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.color = color;
+		super(x, y, width, height, color);
 		this.direction = direction;
-	}
-	
-	public Color getColor() {
-		return this.color;
 	}
 	
 	public Direction getDirection() {
 		return this.direction;
-	}
-
-	public double getX() {
-		return this.x;
-	}
-	  
-	public void setX(double x) {
-		this.x = x;
-	}
-	
-	public double getY() {
-		return this.y;
-	}
-	
-	public void setY(double y) {
-		this.y = y;
-	}
-	  
-	public double getWidth() {
-		return this.width;
-	}
-	
-	public void setWidth(double width) {
-		this.width = width;
-	}
-	  
-	public double getHeight() {
-		return this.height;
-	}
-	
-	public void setHeight(double height) {
-		this.height = height;
-	}
-	
-	public void moveX(double dx) {
-		this.x += dx;
-	}
-	
-	public void moveY(double dy) {
-		this.y += dy;
 	}
 	
 	public double[][] getVertices() {
@@ -131,10 +76,5 @@ public class Triangle implements RenderableEntity, EditableEntity {
 	    }
 	    
 	    return new double[][]{xPoints, yPoints};
-	}
-	
-	public Triangle draw() {
-		CANVAS.fill(this);
-		return this;
 	}
 }

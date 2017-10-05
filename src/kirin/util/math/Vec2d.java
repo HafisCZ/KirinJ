@@ -1,4 +1,4 @@
-package kirin.utils.math;
+package kirin.util.math;
 
 public class Vec2d {
 	

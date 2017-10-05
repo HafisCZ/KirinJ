@@ -1,4 +1,4 @@
-package kirin.utils.math;
+package kirin.util.math;
 
 @SuppressWarnings("serial")
 public class Random extends java.util.Random {

@@ -1,4 +1,4 @@
-package kirin.input;
+package kirin.input.adapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 
 @SuppressWarnings("restriction")
-public class MouseAdapter implements EventHandler<MouseEvent> {
+public class MouseEventAdapter implements EventHandler<MouseEvent> {
 
 	private double x = 0, y = 0;
 	private Map<MouseButton, Boolean> buttonMap = new HashMap<MouseButton, Boolean>();

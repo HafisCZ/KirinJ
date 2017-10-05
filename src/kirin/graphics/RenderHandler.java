@@ -9,7 +9,7 @@ import java.util.Vector;
 
 import kirin.graphics.render.CompositeEntity;
 import kirin.graphics.render.RenderableEntity;
-import kirin.graphics.shapes.Rectangle;
+import kirin.graphics.shape.Shape;
 
 public class RenderHandler {
 
@@ -67,6 +67,7 @@ public class RenderHandler {
 	 * Render all objects in queue
 	 */
 	public void render() {
+		this.target.clear();
 		for (RenderableEntity obj : batch) {
 			render(obj);
 		}
@@ -78,13 +79,21 @@ public class RenderHandler {
 	 */
 	private void render(RenderableEntity obj) {
 		if (obj instanceof CompositeEntity) {
-			// System.err.println("[RENDER HANDLER] " + obj.getClass().getName() + " [" + (int)obj.getX() + " " + (int)obj.getY() + "] [" + (int)obj.getWidth() + " " + (int)obj.getHeight() + "]");
 			for (RenderableEntity sub : ((CompositeEntity) obj).getObjects()) {
 				render(sub);
 			}
 		} else {
-			// System.out.println("[RENDER HANDLER] " + obj.getClass().getName() + " [" + (int)obj.getX() + " " + (int)obj.getY() + "] [" + (int)obj.getWidth() + " " + (int)obj.getHeight() + "]");
-			obj.draw();
+			if (obj instanceof Shape) {
+				Shape shape = (Shape) obj;
+				
+				if (shape.hasFill()) {
+					this.target.fill(shape);
+				}
+				
+				if (shape.hasStroke()) {
+					this.target.stroke(shape);
+				}
+			}
 		}
 	}
 	
@@ -93,7 +102,6 @@ public class RenderHandler {
 	 */
 	public void empty() {
 		batch.removeAllElements();
-		batch.addElement(new Rectangle(0, 0, target.getWidth(), target.getHeight(), target.getBackgroundColor()));
 	}
 	
 }

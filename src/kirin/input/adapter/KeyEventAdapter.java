@@ -1,4 +1,4 @@
-package kirin.input;
+package kirin.input.adapter;
 
 import java.util.HashMap;
 import java.util.Map;

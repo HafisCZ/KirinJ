@@ -5,9 +5,9 @@ import java.awt.Color;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import kirin.graphics.render.RenderableEntity;
-import kirin.input.KeyEventAdapter;
-import kirin.input.MouseAdapter;
+import kirin.graphics.shape.Shape;
+import kirin.input.adapter.KeyEventAdapter;
+import kirin.input.adapter.MouseEventAdapter;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
@@ -19,7 +19,7 @@ public class Canvas extends Application implements Runnable {
 	
 	private CanvasPane canvasPane;
 	private KeyEventAdapter adapter;
-	private MouseAdapter mouseAdapter;
+	private MouseEventAdapter mouseAdapter;
 	
 	public Canvas() {
 		
@@ -41,7 +41,7 @@ public class Canvas extends Application implements Runnable {
 			canvas = this;
 			
 			adapter = new KeyEventAdapter();
-			mouseAdapter = new MouseAdapter();
+			mouseAdapter = new MouseEventAdapter();
 			
 			Scene scene = new Scene(canvasPane, canvasPane.getWidth(), canvasPane.getHeight());
 			scene.addEventFilter(KeyEvent.KEY_PRESSED, adapter);
@@ -82,7 +82,7 @@ public class Canvas extends Application implements Runnable {
 		return this.adapter;
 	}
 	
-	public MouseAdapter getMouseAdapter() {
+	public MouseEventAdapter getMouseAdapter() {
 		return this.mouseAdapter;
 	}
 	
@@ -98,11 +98,11 @@ public class Canvas extends Application implements Runnable {
 		canvasPane.clear();
 	}
 	
-	public void fill(RenderableEntity obj) {
+	public void fill(Shape obj) {
 		canvasPane.fill(obj);
 	}
 	
-	public void stroke(RenderableEntity obj) {
+	public void stroke(Shape obj) {
 		canvasPane.stroke(obj);
 	}
 	

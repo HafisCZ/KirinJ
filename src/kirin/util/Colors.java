@@ -1,4 +1,4 @@
-package kirin.utils;
+package kirin.util;
 
 import java.awt.Color;
 
