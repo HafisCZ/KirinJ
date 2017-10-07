@@ -44,11 +44,9 @@ public class Canvas extends Application implements Runnable {
 			mouseAdapter = new MouseEventAdapter();
 			
 			Scene scene = new Scene(canvasPane, canvasPane.getWidth(), canvasPane.getHeight());
-			scene.addEventFilter(KeyEvent.KEY_PRESSED, adapter);
-			scene.addEventFilter(KeyEvent.KEY_RELEASED, adapter);
-			scene.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseAdapter);
-			scene.addEventFilter(MouseEvent.MOUSE_RELEASED, mouseAdapter);
-			
+			scene.addEventHandler(KeyEvent.ANY, adapter);
+			scene.addEventHandler(MouseEvent.ANY, mouseAdapter);
+
 			stage.setScene(scene);	
 			stage.setTitle("V01.B005 @ Hiraishin Software");
 			
@@ -96,6 +94,10 @@ public class Canvas extends Application implements Runnable {
 
 	public void clear() {
 		canvasPane.clear();
+	}
+	
+	public void fill(String text, double x, double y, Color fill) {
+		canvasPane.fill(text, x, y, fill);
 	}
 	
 	public void fill(Shape obj) {

@@ -14,7 +14,7 @@ public class KeyEventAdapter implements EventHandler<KeyEvent> {
 	private Map<KeyCode, Boolean> keyMapPrev = new HashMap<KeyCode, Boolean>();
 	
 	@Override
-	public void handle(KeyEvent evt) {		
+	public void handle(KeyEvent evt) {
 		if (evt.getEventType().equals(KeyEvent.KEY_PRESSED)) {
 			keyMap.put(evt.getCode(), true);
 		} else if (evt.getEventType().equals(KeyEvent.KEY_RELEASED)) {

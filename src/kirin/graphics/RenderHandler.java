@@ -5,7 +5,8 @@
 
 package kirin.graphics;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import kirin.graphics.render.CompositeEntity;
 import kirin.graphics.render.RenderableEntity;
@@ -14,7 +15,16 @@ import kirin.graphics.shape.Shape;
 public class RenderHandler {
 
 	private Canvas target = null;
-	private Vector<RenderableEntity> batch = new Vector<RenderableEntity>();
+	private List<RenderableEntity> batch = new ArrayList<RenderableEntity>();
+
+	private int callCount;
+	
+	/**
+	 * @throws IllegalArgumentException
+	 */
+	public RenderHandler() {
+		this(Canvas.getInstance());
+	}
 	
 	/**
 	 * 
@@ -27,7 +37,8 @@ public class RenderHandler {
 			throw new IllegalArgumentException("Invalid target");
 		}
 		
-		empty();
+		flush();
+		this.callCount = 0;
 	}
 	
 	/**
@@ -43,7 +54,7 @@ public class RenderHandler {
 	 * @param object RenderableEntity
 	 */
 	public void add(RenderableEntity object) {
-		batch.addElement(object);
+		batch.add(object);
 	}
 	
 	/**
@@ -64,9 +75,18 @@ public class RenderHandler {
 	}
 	
 	/**
+	 * Get most recent count of rendered objects
+	 * @return object count
+	 */
+	public int count() {
+		return callCount;
+	}
+	
+	/**
 	 * Render all objects in queue
 	 */
 	public void render() {
+		this.callCount = 0;
 		this.target.clear();
 		for (RenderableEntity obj : batch) {
 			render(obj);
@@ -83,6 +103,7 @@ public class RenderHandler {
 				render(sub);
 			}
 		} else {
+			this.callCount++;
 			if (obj instanceof Shape) {
 				Shape shape = (Shape) obj;
 				
@@ -100,8 +121,8 @@ public class RenderHandler {
 	/**
 	 * Clear render queue
 	 */
-	public void empty() {
-		batch.removeAllElements();
+	public void flush() {
+		batch.clear();
 	}
 	
 }

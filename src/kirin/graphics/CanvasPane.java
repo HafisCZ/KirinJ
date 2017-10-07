@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcType;
-
+import javafx.scene.text.Font;
 import kirin.graphics.shape.Arc;
 import kirin.graphics.shape.Ellipse;
 import kirin.graphics.shape.Rectangle;
@@ -53,6 +53,12 @@ public class CanvasPane extends Pane {
 	
 	public void stroke(Shape obj) {
 		stroke(obj, obj.getStroke());
+	}
+	
+	public void fill(String text, double x, double y, Color fillColor) {
+		graphicsContext.setFill(getColor(fillColor));
+		graphicsContext.setFont(new Font("arial", 15));
+		graphicsContext.fillText(text, x, y + graphicsContext.getFont().getSize());
 	}
 	
 	public void fill(Shape obj, Color fillColor) {

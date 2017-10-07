@@ -12,7 +12,11 @@ public class Ellipse extends Shape {
 		super(x, y, width, height, Color.BLACK);
 	}
 	
-	public Ellipse(double x, double y, double height, double width, Color color) {
-		super(x, y, width, height, color);
+	public Ellipse(double x, double y, double height, double width, Color fill) {
+		super(x, y, width, height, fill);
+	}
+	
+	public Ellipse(double x, double y, double height, double width, Color fill, Color stroke) {
+		super(x, y, width, height, fill, stroke);
 	}
 }

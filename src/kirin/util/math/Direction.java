@@ -24,30 +24,6 @@ public enum Direction {
 		return new Vec2d(this.angle);
 	}
 	
-	/**
-	 * Turn 180 degrees
-	 */
-	public Direction invert() {
-		this.angle = (this.angle + 180) % 360;
-		return this;
-	}
-	
-	/**
-	 * Turn left
-	 */
-	public Direction sub90() {
-		this.angle = (this.angle + 270) % 360;
-		return this;
-	}
-	
-	/**
-	 * Turn right
-	 */
-	public Direction add90() {
-		this.angle = (this.angle + 90) % 360;
-		return this;
-	}
-	
 	public double getAngle() {
 		return this.angle;
 	}

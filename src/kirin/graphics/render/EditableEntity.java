@@ -14,6 +14,10 @@ public interface EditableEntity {
 	
 	public void moveX(double dx);
 	public void moveY(double dy);
+	public default void move(double dx, double dy) {
+		moveX(dx);
+		moveY(dy);
+	}
 	
 	public void setWidth(double width);
 	public void setHeight(double height);

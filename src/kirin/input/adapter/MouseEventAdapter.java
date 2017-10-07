@@ -52,11 +52,11 @@ public class MouseEventAdapter implements EventHandler<MouseEvent> {
 		return (isHeld(key) & !wasHeld(key));
 	}
 	
-	public double lastX() {
+	public double getX() {
 		return this.x;
 	}
 	
-	public double lastY() {
+	public double getY() {
 		return this.y;
 	}
 

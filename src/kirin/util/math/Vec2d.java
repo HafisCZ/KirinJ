@@ -17,8 +17,11 @@ public class Vec2d {
 	
 	public Vec2d normalize() {
 		double len = length();
-		this.dx /= len;
-		this.dy /= len;
+		if (len != 0) {
+			this.dx /= len;
+			this.dy /= len;
+		}
+
 		return this;
 	}
 	
@@ -46,5 +49,22 @@ public class Vec2d {
 	
 	public double y() {
 		return this.dy;
+	}
+	
+	public static Vec2d getMultiplied(Vec2d vec, double fact) {
+		return new Vec2d(vec.dx * fact, vec.dy * fact);
+	}
+	
+	public static Vec2d getInverted(Vec2d vec) {
+		return new Vec2d(-vec.dx, -vec.dy);
+	}
+	
+	public static Vec2d getNormalized(Vec2d vec) {
+		double len = vec.length();
+		if (len == 0) {
+			return new Vec2d(0, 0);
+		} else {
+			return new Vec2d(vec.dx / len, vec.dy / len);
+		}
 	}
 }

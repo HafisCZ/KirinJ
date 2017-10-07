@@ -34,25 +34,30 @@ public abstract class Shape implements RenderableEntity, EditableEntity {
 	
 	public void setFill(Color color) {
 		this.fillColor = color;
-		
+		this.hasFill = true;
 	}
 	
 	public void setStroke(Color color) {
 		this.strokeColor = color;
+		this.hasStroke = true;
 	}
 	
+	@Override
 	public Color getFill() {
 		return this.fillColor;
 	}
 	
+	@Override
 	public Color getStroke() {
 		return this.strokeColor;
 	}
 	
+	@Override
 	public boolean hasFill() {
 		return this.hasFill;
 	}
 	
+	@Override
 	public boolean hasStroke() {
 		return this.hasStroke;
 	}

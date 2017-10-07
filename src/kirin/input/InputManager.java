@@ -7,12 +7,12 @@ import kirin.input.adapter.KeyEventAdapter;
 import kirin.input.adapter.MouseEventAdapter;
 
 @SuppressWarnings("restriction")
-public class InputHandler {
+public class InputManager {
 	
 	private KeyEventAdapter adapter;
 	private MouseEventAdapter mouseAdapter;
 	
-	public InputHandler(Canvas canvas) {
+	public InputManager(Canvas canvas) {
 		this.adapter = canvas.getKeyAdapter();
 		this.mouseAdapter = canvas.getMouseAdapter();
 	}
@@ -33,12 +33,12 @@ public class InputHandler {
 		return mouseAdapter.isPressed(key);
 	}
 
-	public double getLastMouseX() {
-		return mouseAdapter.lastX();
+	public double getMouseX() {
+		return mouseAdapter.getX();
 	}
 	
-	public double getLastMouseY() {
-		return mouseAdapter.lastY();
+	public double getMouseY() {
+		return mouseAdapter.getY();
 	}
 
 	public void updateAdapters() {
