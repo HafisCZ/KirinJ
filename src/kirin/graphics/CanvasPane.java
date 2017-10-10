@@ -34,33 +34,65 @@ public class CanvasPane extends Pane {
 		getChildren().add(canvas);
 	}
 	
+	/**
+	 * Get background color of canvas
+	 * @return Background color
+	 */
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
 	
+	/**
+	 * Set background color of canvas
+	 * @param color Background color
+	 */
 	public void setBackgroundColor(Color color) {
 		backgroundColor = color;
 		clear();
 	}
 
+	/**
+	 * Clear canvas
+	 */
 	public void clear() {
 		graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 	
+	/**
+	 * Fill shape
+	 * @param obj	Shape
+	 */
 	public void fill(Shape obj) {
 		fill(obj, obj.getFill());
 	}
 	
+	/**
+	 * Stroke shape
+	 * @param obj	Shape
+	 */
 	public void stroke(Shape obj) {
 		stroke(obj, obj.getStroke());
 	}
 	
-	public void fill(String text, double x, double y, Color fillColor) {
+	/**
+	 * Draw text onto canvas
+	 * @param text	Text to be drawn
+	 * @param x	Top left x
+	 * @param y	Top left y
+	 * @param size	Text size
+	 * @param fill	Text color
+	 */
+	public void fill(String text, double x, double y, int size, Color fillColor) {
 		graphicsContext.setFill(getColor(fillColor));
-		graphicsContext.setFont(new Font("arial", 15));
+		graphicsContext.setFont(new Font("arial", size));
 		graphicsContext.fillText(text, x, y + graphicsContext.getFont().getSize());
 	}
 	
+	/**
+	 * Fill shape
+	 * @param obj	Shape
+	 * @param fillColor	Fill color
+	 */
 	public void fill(Shape obj, Color fillColor) {
 		graphicsContext.setFill(getColor(fillColor));
 		
@@ -79,6 +111,11 @@ public class CanvasPane extends Pane {
 		}
 	}
 	
+	/**
+	 * Stroke shape
+	 * @param obj	Shape
+	 * @param strokeColor	Stroke color
+	 */
 	public void stroke(Shape obj, Color strokeColor) {
 		graphicsContext.setStroke(getColor(strokeColor));
 		
@@ -97,6 +134,11 @@ public class CanvasPane extends Pane {
 		}
 	}
 	
+	/**
+	 * Translate color
+	 * @param color java.awt.Color
+	 * @return	javafx.scene.paint.Color
+	 */
 	private static Paint getColor(Color color) {
 		return javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.);
 	}

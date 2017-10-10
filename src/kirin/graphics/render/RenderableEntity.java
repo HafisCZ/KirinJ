@@ -44,8 +44,27 @@ public interface RenderableEntity {
 		return Color.BLACK;
 	}
 	
+	/**
+	 * 
+	 * @return x
+	 */
 	public double getX();
+	
+	/**
+	 * 
+	 * @return y
+	 */
 	public double getY();
+	
+	/**
+	 * 
+	 * @return width
+	 */
 	public double getWidth();
+	
+	/**
+	 * 
+	 * @return height
+	 */
 	public double getHeight();
 }

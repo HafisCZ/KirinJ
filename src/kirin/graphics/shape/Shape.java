@@ -11,6 +11,13 @@ public abstract class Shape implements RenderableEntity, EditableEntity {
 	protected Color fillColor, strokeColor;
 	protected boolean hasStroke, hasFill;
 	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
 	protected Shape(double x, double y, double width, double height) {
 		this.x = x;
 		this.y = y;
@@ -20,23 +27,48 @@ public abstract class Shape implements RenderableEntity, EditableEntity {
 		this.hasStroke = false;
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param fill
+	 */
 	protected Shape(double x, double y, double width, double height, Color fill) {
 		this(x, y, width, height);
 		this.fillColor = fill;
 		this.hasFill = true;
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param fill
+	 * @param stroke
+	 */
 	protected Shape(double x, double y, double width, double height, Color fill, Color stroke) {
 		this(x, y, width, height, fill);
 		this.strokeColor = stroke;
 		this.hasStroke = true;
 	}
 	
+	/**
+	 * Set fill color of shape
+	 * @param color Fill color
+	 */
 	public void setFill(Color color) {
 		this.fillColor = color;
 		this.hasFill = true;
 	}
 	
+	/**
+	 * Set stroke color of shape
+	 * @param color Stroke color
+	 */
 	public void setStroke(Color color) {
 		this.strokeColor = color;
 		this.hasStroke = true;
@@ -56,12 +88,15 @@ public abstract class Shape implements RenderableEntity, EditableEntity {
 	public boolean hasFill() {
 		return this.hasFill;
 	}
-	
+
 	@Override
 	public boolean hasStroke() {
 		return this.hasStroke;
 	}
 	
+	/**
+	 * Returns itself
+	 */
 	@Override
 	@Deprecated
 	public Shape draw() {

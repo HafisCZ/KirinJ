@@ -47,8 +47,12 @@ public class Canvas extends Application implements Runnable {
 			scene.addEventHandler(KeyEvent.ANY, adapter);
 			scene.addEventHandler(MouseEvent.ANY, mouseAdapter);
 
-			stage.setScene(scene);	
-			stage.setTitle("V01.B005 @ Hiraishin Software");
+			stage.setScene(scene);
+			stage.sizeToScene();
+			stage.setResizable(false);
+			
+			stage.setTitle("KirinJ V01.B005");
+			stage.requestFocus();
 			
 			stage.show();
 			
@@ -69,6 +73,10 @@ public class Canvas extends Application implements Runnable {
 		}
 	}
 	
+	/**
+	 * Get existing instance of canvas or create new
+	 * @return Instance
+	 */
 	public static Canvas getInstance() {
 		if (canvas == null) {
 			launchAsync();
@@ -76,42 +84,85 @@ public class Canvas extends Application implements Runnable {
 		return canvas;
 	}
 	
+	/**
+	 * Get attached key adapter
+	 * @return Attached KeyAdapter
+	 */
 	public KeyEventAdapter getKeyAdapter() {
 		return this.adapter;
 	}
 	
+	/**
+	 * Get attached mouse adapter
+	 * @return Attached MouseAdapter
+	 */
 	public MouseEventAdapter getMouseAdapter() {
 		return this.mouseAdapter;
 	}
 	
+	/**
+	 * Set background color of canvas
+	 * @param color Background color
+	 */
 	public void setBackgroundColor(Color color) {
 		canvasPane.setBackgroundColor(color);
 	}
 	
+	/**
+	 * Get background color of canvas
+	 * @return Background color
+	 */
 	public Color getBackgroundColor() {
 		return canvasPane.getBackgroundColor();
 	}
 
+	/**
+	 * Clear canvas
+	 */
 	public void clear() {
 		canvasPane.clear();
 	}
 	
-	public void fill(String text, double x, double y, Color fill) {
-		canvasPane.fill(text, x, y, fill);
+	/**
+	 * Draw text onto canvas
+	 * @param text	Text to be drawn
+	 * @param x	Top left x
+	 * @param y	Top left y
+	 * @param size	Text size
+	 * @param fill	Text color
+	 */
+	public void fill(String text, double x, double y, int size, Color fill) {
+		canvasPane.fill(text, x, y, size, fill);
 	}
 	
+	/**
+	 * Fill shape
+	 * @param obj	Shape
+	 */
 	public void fill(Shape obj) {
 		canvasPane.fill(obj);
 	}
 	
+	/**
+	 * Stroke shape
+	 * @param obj	Shape
+	 */
 	public void stroke(Shape obj) {
 		canvasPane.stroke(obj);
 	}
 	
+	/**
+	 * 
+	 * @return Canvas width
+	 */
 	public double getWidth() {
 		return canvasPane.getWidth();
 	}
 	
+	/**
+	 * 
+	 * @return Canvas height
+	 */
 	public double getHeight() {
 		return canvasPane.getHeight();
 	}

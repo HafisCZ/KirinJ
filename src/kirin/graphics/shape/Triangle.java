@@ -8,27 +8,67 @@ public class Triangle extends Shape {
 
 	protected Direction direction;
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
 	public Triangle(double x, double y, double width, double height) {
 		this(x, y, width, height, Color.BLACK, Direction.NORTH);
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param color
+	 */
 	public Triangle(double x, double y, double width, double height, Color color) {
 		this(x, y, width, height, color, Direction.NORTH);
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param direction
+	 */
 	public Triangle(double x, double y, double width, double height, Direction direction) {
 		this(x, y, width, height, Color.BLACK, direction);
 	}
 	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param color
+	 * @param direction
+	 */
 	public Triangle(double x, double y, double width, double height, Color color, Direction direction) {
 		super(x, y, width, height, color);
 		this.direction = direction;
 	}
 	
+	/**
+	 * 
+	 * @return Direction
+	 */
 	public Direction getDirection() {
 		return this.direction;
 	}
 	
+	/**
+	 * 
+	 * @return Arrays of coordinates
+	 */
 	public double[][] getVertices() {
 		double[] xPoints = null;
 	    double[] yPoints = null;
