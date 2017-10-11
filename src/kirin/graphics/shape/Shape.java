@@ -2,10 +2,10 @@ package kirin.graphics.shape;
 
 import java.awt.Color;
 
-import kirin.graphics.render.EditableEntity;
-import kirin.graphics.render.RenderableEntity;
+import kirin.graphics.render.EditableObject;
+import kirin.graphics.render.RenderableObject;
 
-public abstract class Shape implements RenderableEntity, EditableEntity {
+public abstract class Shape implements RenderableObject, EditableObject {
 
 	protected double x, y, width, height;
 	protected Color fillColor, strokeColor;

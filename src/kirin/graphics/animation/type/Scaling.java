@@ -1,6 +1,7 @@
 package kirin.graphics.animation.type;
 
-import kirin.graphics.render.EditableEntity;
+import kirin.graphics.animation.Animation;
+import kirin.graphics.render.EditableObject;
 
 public class Scaling extends Animation {
 	
@@ -22,7 +23,7 @@ public class Scaling extends Animation {
 	}
 
 	@Override
-	public boolean update(EditableEntity entity, double ix, double iy, double iw, double ih) {
+	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih) {
 		switch (type) {
 			case FAST:
 				if (time > stepLength) {

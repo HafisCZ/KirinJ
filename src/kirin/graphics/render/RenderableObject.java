@@ -2,7 +2,7 @@ package kirin.graphics.render;
 
 import java.awt.Color;
 
-public interface RenderableEntity {
+public interface RenderableObject {
 
 	/**
 	 * Single draw call for object
@@ -10,7 +10,7 @@ public interface RenderableEntity {
 	 * @return itself
 	 */
 	@Deprecated
-	public RenderableEntity draw();
+	public RenderableObject draw();
 	
 	/**
 	 * Returns true if object has fill color set

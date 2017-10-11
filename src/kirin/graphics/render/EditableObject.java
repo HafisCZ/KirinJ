@@ -3,7 +3,7 @@ package kirin.graphics.render;
 /**
  * Interface for objects with editable position / dimensions
  */
-public interface EditableEntity {
+public interface EditableObject {
 
 	/**
 	 * Place entity at
@@ -38,6 +38,22 @@ public interface EditableEntity {
 	 * @return y
 	 */
 	public double getY();
+	
+	/**
+	 * 
+	 * @return Center x
+	 */
+	public default double getCenterX() {
+		return getX() + getWidth() / 2;
+	}
+	
+	/**
+	 * 
+	 * @return Center y
+	 */
+	public default double getCenterY() {
+		return getY() + getHeight() / 2;
+	}
 	
 	/**
 	 * Move entity

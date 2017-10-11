@@ -1,6 +1,6 @@
-package kirin.graphics.animation.type;
+package kirin.graphics.animation;
 
-import kirin.graphics.render.EditableEntity;
+import kirin.graphics.render.EditableObject;
 
 public abstract class Animation {
 	
@@ -40,5 +40,5 @@ public abstract class Animation {
 	 * @param ih	Entity original height
 	 * @return	End of Animation
 	 */
-	public abstract boolean update(EditableEntity entity, double ix, double iy, double iw, double ih);
+	public abstract boolean update(EditableObject entity, double ix, double iy, double iw, double ih);
 }

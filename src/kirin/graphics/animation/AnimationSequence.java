@@ -1,7 +1,6 @@
 package kirin.graphics.animation;
 
-import kirin.graphics.animation.type.Animation;
-import kirin.graphics.render.EditableEntity;
+import kirin.graphics.render.EditableObject;
 
 public class AnimationSequence {
 	
@@ -9,35 +8,57 @@ public class AnimationSequence {
 		ON_DEMAND, AUTO
 	}
 
-	private EditableEntity entity;
-	private Animation[] animationSteps;
-	private int time, stepIndex;
+	private EditableObject[] objects;
+	private Animation[] animations;
+	private double[][] data;
+	
+	private int time = 1, stepIndex = 0;
 	private boolean running = false, repeat = false;
 	private Launch launch;
-	private double x, y, w, h;
+
+	/**
+	 * 
+	 * @param object	Object to be animated
+	 * @param animations	Animations
+	 * @param repeat	Repeat forever
+	 * @param launch	Type of launch
+	 */
+	public AnimationSequence(EditableObject object, Animation[] animations, boolean repeat, Launch launch) {
+		this(new EditableObject[] { object }, animations, repeat, launch);
+	}
 	
 	/**
 	 * 
-	 * @param entity	Entity managed by Animation
-	 * @param steps		Array of individual Animation steps
-	 * @param repeat	True if steps should repeat
-	 * @param launch	ON_DEMAND or AUTO
+	 * @param objects	Objects to be animated
+	 * @param animations	Animations
+	 * @param repeat	Repeat forever
+	 * @param launch	Type of launch
 	 */
-	public AnimationSequence(EditableEntity entity, Animation[] steps, boolean repeat, Launch launch) {
-		this.entity = entity;
-		this.animationSteps = steps;
-		this.time = 1;
-		this.stepIndex = 0;
-		this.x = entity.getX();
-		this.y = entity.getY();
-		this.w = entity.getWidth();
-		this.h = entity.getHeight();
+	public AnimationSequence(EditableObject[] objects, Animation[] animations, boolean repeat, Launch launch) {
+		this.objects = objects;
+		this.animations = animations;
 		
 		this.repeat = repeat;
 		this.launch = launch;
-		
 		if (launch.equals(Launch.AUTO)) {
 			this.running = true;
+		}
+		
+		this.data = new double[objects.length][4];
+		updateObjectData();
+	}
+	
+	/**
+	 * Update object data
+	 */
+	private void updateObjectData() {
+		for (int i = 0; i < objects.length; i++) {
+			this.data[i] = new double[] {
+				this.objects[i].getX(),
+				this.objects[i].getY(),
+				this.objects[i].getWidth(),
+				this.objects[i].getHeight()
+			};
 		}
 	}
 
@@ -67,7 +88,7 @@ public class AnimationSequence {
 	 * @return Current animation
 	 */
 	public Animation getCurrentAnimation() {
-		return this.animationSteps[this.stepIndex];
+		return this.animations[this.stepIndex];
 	}
 	
 	/**
@@ -91,7 +112,7 @@ public class AnimationSequence {
 	 * Update current Animation
 	 */
 	public void update() {
-		if (stepIndex >= animationSteps.length) {
+		if (stepIndex >= animations.length) {
 			stepIndex = 0;
 			time = 1;
 			if (!onRepeat()) {
@@ -99,13 +120,15 @@ public class AnimationSequence {
 			}
 		}
 		
-		if (stepIndex < animationSteps.length && this.running) {
-			if (animationSteps[stepIndex].update(entity, x, y, w, h)) {
+		if (stepIndex < animations.length && this.running) {
+			boolean advance = false;
+			for (int i = 0; i < objects.length; i++) {
+				advance |= animations[stepIndex].update(objects[i], data[i][0], data[i][1], data[i][2], data[i][3]);
+			}
+			
+			if (advance) {
 				this.stepIndex++;
-				this.x = entity.getX();
-				this.y = entity.getY();
-				this.w = entity.getWidth();
-				this.h = entity.getHeight();
+				updateObjectData();
 				update();
 			} else {
 				this.time++;
@@ -117,7 +140,7 @@ public class AnimationSequence {
 	 * Count of Animations
 	 */
 	public int getAnimationCount() {
-		return this.animationSteps.length;
+		return this.animations.length;
 	}
 	
 	/**

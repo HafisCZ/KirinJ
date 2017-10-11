@@ -19,7 +19,7 @@ public class Vec2d {
 	 * @param angle Angle in degrees, 0 equals EAST
 	 */
 	public Vec2d(double angle) {
-		double rads = Math.toRadians(angle);
+		double rads = Math.toRadians((angle >= 0 ? angle : angle + 360));
 		this.dx = Math.cos(rads);
 		this.dy = Math.sin(rads);
 	}
@@ -43,7 +43,8 @@ public class Vec2d {
 	 * @return Angle of vector
 	 */
 	public double angle() {
-		return Math.toDegrees(Math.atan2(this.dy, this.dx));
+		double angle = Math.toDegrees(Math.atan2(this.dy, this.dx));
+		return (angle >= 0 ? angle : angle + 360);
 	}
 	
 	/**

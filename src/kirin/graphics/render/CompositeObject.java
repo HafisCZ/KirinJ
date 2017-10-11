@@ -1,18 +1,18 @@
 package kirin.graphics.render;
 
-public interface CompositeEntity extends RenderableEntity {
+public interface CompositeObject extends RenderableObject {
 
 	/**
 	 * 
 	 * @return Array of render-able objects
 	 */
-	public RenderableEntity[] getObjects();
+	public RenderableObject[] getObjects();
 	
 	/**
 	 * Returns itself for backward compatibility
 	 */
 	@Deprecated
-	public default RenderableEntity draw() {
+	public default RenderableObject draw() {
 		return this;
 	}
 	

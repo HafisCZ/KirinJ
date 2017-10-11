@@ -1,6 +1,7 @@
 package kirin.graphics.animation.type;
 
-import kirin.graphics.render.EditableEntity;
+import kirin.graphics.animation.Animation;
+import kirin.graphics.render.EditableObject;
 
 public class Motion extends Animation {
 	
@@ -19,7 +20,7 @@ public class Motion extends Animation {
 	}
 
 	@Override
-	public boolean update(EditableEntity entity, double ix, double iy, double iw, double ih) {
+	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih) {
 		if (this.time <= this.stepLength) {
 			entity.move(dx, dy);
 			this.time++;

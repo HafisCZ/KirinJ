@@ -2,7 +2,8 @@ package kirin.graphics.animation.type;
 
 import java.awt.Color;
 
-import kirin.graphics.render.EditableEntity;
+import kirin.graphics.animation.Animation;
+import kirin.graphics.render.EditableObject;
 import kirin.graphics.shape.Shape;
 
 public class Coloring extends Animation {
@@ -32,7 +33,7 @@ public class Coloring extends Animation {
 	}
 
 	@Override
-	public boolean update(EditableEntity entity, double ix, double iy, double iw, double ih) {
+	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih) {
 		if (!(entity instanceof Shape)) {
 			throw new IllegalArgumentException("AnimationSequence.Animation.Coloring compatible only with objects derived from Shape class");
 		}

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kirin.graphics.animation.AnimationSequence;
-import kirin.graphics.render.CompositeEntity;
-import kirin.graphics.render.RenderableEntity;
+import kirin.graphics.render.CompositeObject;
+import kirin.graphics.render.RenderableObject;
 import kirin.graphics.shape.Shape;
 import kirin.util.Colors;
 
@@ -19,7 +19,7 @@ public class RenderHandler {
 	public static final String RENDERER_NAME = "mar21.kirin.core.v01.b005";
 	
 	private Canvas target = null;
-	private List<RenderableEntity> batch = new ArrayList<RenderableEntity>();
+	private List<RenderableObject> objects = new ArrayList<RenderableObject>();
 	private List<AnimationSequence> animations = new ArrayList<AnimationSequence>();
 
 	private int callCount, frameCount;
@@ -76,8 +76,10 @@ public class RenderHandler {
 	 * Adds object to render queue
 	 * @param object RenderableEntity
 	 */
-	public void add(RenderableEntity object) {
-		batch.add(object);
+	public void add(RenderableObject object) {
+		if (!objects.contains(object)) {
+			objects.add(object);
+		}
 	}
 	
 	/**
@@ -85,7 +87,9 @@ public class RenderHandler {
 	 * @param animation AnimationSequence
 	 */
 	public void add(AnimationSequence animation) {
-		animations.add(animation);
+		if (!animations.contains(animation)) {
+			animations.add(animation);
+		}
 	}
 	
 	/**
@@ -93,8 +97,8 @@ public class RenderHandler {
 	 * @param object RenderableEntity
 	 * @return Removed object
 	 */
-	public boolean remove(RenderableEntity object) {
-		return batch.remove(object);
+	public boolean remove(RenderableObject object) {
+		return objects.remove(object);
 	}
 	
 	/**
@@ -128,11 +132,13 @@ public class RenderHandler {
 	 * @param rowIter
 	 * @return
 	 */
-	private int showEntityDebugInfo(RenderableEntity entity, int rowIter) {
-		this.target.fill((int) entity.getX() + " \t" + (int) entity.getY() + " \t" + entity.getClass().getName(), 0, 9 * rowIter++, 9, Colors.GREEN_FOLIAGE);
+	private int showEntityDebugInfo(RenderableObject entity, int rowIter) {
+		this.target.fill(Integer.toString((int) entity.getX()), 0, 9 * rowIter, 9, Colors.GRAY_CHARCOAL);
+		this.target.fill(Integer.toString((int) entity.getY()), 30, 9 * rowIter, 9, Colors.GRAY_CHARCOAL);
+		this.target.fill(entity.getClass().getName(), 60, 9 * rowIter++, 9, Colors.GREEN_FOLIAGE);
 		
-		if (entity instanceof CompositeEntity) {
-			for (RenderableEntity subEnt : ((CompositeEntity) entity).getObjects()) {
+		if (entity instanceof CompositeObject) {
+			for (RenderableObject subEnt : ((CompositeObject) entity).getObjects()) {
 				rowIter = showEntityDebugInfo(subEnt, rowIter);
 			}
 		}
@@ -147,9 +153,13 @@ public class RenderHandler {
 	 * @return
 	 */
 	private int showAnimationSequenceDebugInfo(AnimationSequence animation, int rowIter) {
-		this.target.fill(animation.getCurrentAnimation().getClass().getSimpleName(), 200, 9 * rowIter, 9, Colors.PURPLE_RED);
-		this.target.fill(animation.getLaunchConfiguration().toString(), 250, 9 * rowIter, 9, Colors.GREEN_FOLIAGE);
+		if (animation.getAnimationCount() > 0 && animation.isRunning()) {
+			this.target.fill(animation.getCurrentAnimation().getClass().getSimpleName(), 200, 9 * rowIter, 9, Colors.PURPLE_RED);
+		} else {
+			this.target.fill("None", 200, 9 * rowIter, 9, Colors.PURPLE_RED);
+		}
 		
+		this.target.fill(animation.getLaunchConfiguration().toString(), 250, 9 * rowIter, 9, Colors.GREEN_FOLIAGE);
 		this.target.fill("R: " + animation.isRunning() 
 					+ " \tC: " + animation.onRepeat() 
 					+ " \tA: " + animation.getAnimationCount() 
@@ -172,18 +182,18 @@ public class RenderHandler {
 			animation.update();
 		}
 
-		for (RenderableEntity obj : batch) {
+		for (RenderableObject obj : objects) {
 			render(obj);
 		}
 		
 		if (this.debug) {
 			this.target.fill(RENDERER_NAME, 0, 0, 9, Colors.PURPLE_DEEP);
 			this.target.fill("Frames: " + this.frameCount, 200, 0, 9, Colors.RED_DEEP);
-			this.target.fill("Renderer \tQueue: " + batch.size() + "     \tCalls: " + this.callCount, 0, 18, 9, Colors.RED_DEEP);
+			this.target.fill("Renderer \tQueue: " + objects.size() + "     \tCalls: " + this.callCount, 0, 18, 9, Colors.RED_DEEP);
 			this.target.fill("AnimationSequences \tQueue: " + animations.size(), 200, 18, 9, Colors.RED_DEEP);
 			
 			int rowIter = 4;
-			for (RenderableEntity ent : batch) {
+			for (RenderableObject ent : objects) {
 				rowIter = showEntityDebugInfo(ent, rowIter);
 			}
 			
@@ -198,9 +208,9 @@ public class RenderHandler {
 	 * Hierarchical render call of object
 	 * @param obj RenderableEntity to be rendered
 	 */
-	private void render(RenderableEntity obj) {
-		if (obj instanceof CompositeEntity) {
-			for (RenderableEntity sub : ((CompositeEntity) obj).getObjects()) {
+	private void render(RenderableObject obj) {
+		if (obj instanceof CompositeObject) {
+			for (RenderableObject sub : ((CompositeObject) obj).getObjects()) {
 				render(sub);
 			}
 		} else {
@@ -223,7 +233,7 @@ public class RenderHandler {
 	 * Clear render queue
 	 */
 	public void flush() {
-		batch.clear();
+		objects.clear();
 		animations.clear();
 	}
 	
