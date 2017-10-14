@@ -8,87 +8,95 @@ package kirin.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import kirin.graphics.animation.AnimationSequence;
+import kirin.graphics.animation.Animation;
+import kirin.graphics.animation.AnimationScript;
 import kirin.graphics.render.CompositeObject;
 import kirin.graphics.render.RenderableObject;
 import kirin.graphics.shape.Shape;
+import kirin.input.InputManager;
 import kirin.util.Colors;
 
 public class RenderHandler {
 
-	public static final String RENDERER_NAME = "mar21.kirin.core.v01.b005";
+	public static final String RENDERER_NAME = "mar21.kirin.v01.b008";
 	
-	private Canvas target = null;
+	private Canvas canvas = null;
 	private List<RenderableObject> objects = new ArrayList<RenderableObject>();
-	private List<AnimationSequence> animations = new ArrayList<AnimationSequence>();
+	private List<AnimationScript> scripts = new ArrayList<AnimationScript>();
 
-	private int callCount, frameCount;
-	private boolean debug;
+	private InputManager input = null;
+	
+	private long previousNano = System.nanoTime();
+	private long delta = 0;
+	private int callCount = 0;
+	private int frameCount = 0;
+	private boolean showDebugInfo = false;
+	
+	/**
+	 * @param width	Preferred window width
+	 * @param height	Preferred window height
+	 * @throws IllegalArgumentException
+	 */
+	public RenderHandler(double width, double height) {
+		Canvas.requestResolution(width, height);
+		this.canvas = Canvas.getInstance();
+
+		flush();
+	}
 	
 	/**
 	 * @throws IllegalArgumentException
 	 */
 	public RenderHandler() {
-		this(Canvas.getInstance());
-	}
-	
-	/**
-	 * 
-	 * @param interlayer Canvas to be used as interlayer
-	 * @throws IllegalArgumentException
-	 */
-	public RenderHandler(Canvas interlayer) {
-		this.target = interlayer;
-		if (this.target == null) {
-			throw new IllegalArgumentException("Invalid target");
-		}
-		
+		this.canvas = Canvas.getInstance();
+
 		flush();
-		this.callCount = 0;
-		this.frameCount = 0;
-		this.debug = false;
 	}
 	
 	/**
 	 * Returns used interlayer
 	 * @return Interlayer canvas
 	 */
-	public Canvas getTarget() {
-		return target;
+	public Canvas getCanvas() {
+		return canvas;
 	}
 	
 	/**
 	 * Change state of debug
 	 * @param debug Debug state
 	 */
-	public void debug(boolean debug) {
-		this.debug = debug;
+	public void showDebugOverlay(boolean debug) {
+		this.showDebugInfo = debug;
 	}
 	
 	/**
 	 * @return Debug state
 	 */
-	public boolean isDebugged() {
-		return this.debug;
+	public boolean isShowingDebugOverlay() {
+		return this.showDebugInfo;
 	}
 	
 	/**
-	 * Adds object to render queue
-	 * @param object RenderableEntity
+	 * Adds objects to queue
+	 * @param objects RenderableObjects
 	 */
-	public void add(RenderableObject object) {
-		if (!objects.contains(object)) {
-			objects.add(object);
+	public void add(RenderableObject... objects) {
+		for (RenderableObject obj : objects) {
+			if (obj != null && !this.objects.contains(obj)) {
+				this.objects.add(obj);
+			}
 		}
 	}
 	
 	/**
-	 * Adds animation sequence to render queue
-	 * @param animation AnimationSequence
+	 * Adds scripts to queue
+	 * @param scripts AnimationScript
 	 */
-	public void add(AnimationSequence animation) {
-		if (!animations.contains(animation)) {
-			animations.add(animation);
+	public void add(AnimationScript... scripts) {
+		for (AnimationScript script : scripts) {			
+			if (script != null && !this.scripts.contains(script)) {
+				this.scripts.add(script);
+			}
 		}
 	}
 	
@@ -102,19 +110,19 @@ public class RenderHandler {
 	}
 	
 	/**
-	 * Removes animation from 
-	 * @param animation AnimationSequence
+	 * Removes script from 
+	 * @param animation AnimationScript
 	 * @return Removed object
 	 */
-	public boolean remove(AnimationSequence animation) {
-		return animations.remove(animation);
+	public boolean remove(AnimationScript script) {
+		return scripts.remove(script);
 	}
 	
 	/**
 	 * Get most recent count of rendered objects
 	 * @return Object count
 	 */
-	public int count() {
+	public int countCalls() {
 		return callCount;
 	}
 	
@@ -122,7 +130,7 @@ public class RenderHandler {
 	 * Get count of rendered frames in total
 	 * @return Total count
 	 */
-	public int total() {
+	public int countFrames() {
 		return frameCount;
 	}
 	
@@ -133,14 +141,18 @@ public class RenderHandler {
 	 * @return
 	 */
 	private int showEntityDebugInfo(RenderableObject entity, int rowIter) {
-		this.target.fill(Integer.toString((int) entity.getX()), 0, 9 * rowIter, 9, Colors.GRAY_CHARCOAL);
-		this.target.fill(Integer.toString((int) entity.getY()), 30, 9 * rowIter, 9, Colors.GRAY_CHARCOAL);
-		this.target.fill(entity.getClass().getName(), 60, 9 * rowIter++, 9, Colors.GREEN_FOLIAGE);
+		this.canvas.fill(Integer.toString((int) entity.getX()), 0, 9 * rowIter, 9, Colors.BLACK);
+		this.canvas.fill(Integer.toString((int) entity.getY()), 30, 9 * rowIter, 9, Colors.BLACK);
 		
 		if (entity instanceof CompositeObject) {
+			this.canvas.fill(Integer.toHexString(entity.hashCode()), 60, 9 * rowIter, 9, Colors.ORANGE_VIBRANT);
+			this.canvas.fill(entity.getClass().getSimpleName(), 120, 9 * rowIter++, 9, Colors.ORANGE_VIBRANT);
 			for (RenderableObject subEnt : ((CompositeObject) entity).getObjects()) {
 				rowIter = showEntityDebugInfo(subEnt, rowIter);
 			}
+		} else {
+			this.canvas.fill(Integer.toHexString(entity.hashCode()), 60, 9 * rowIter, 9, Colors.BLACK);
+			this.canvas.fill(entity.getClass().getSimpleName(), 120, 9 * rowIter++, 9, Colors.BLACK);
 		}
 		
 		return rowIter;
@@ -148,24 +160,38 @@ public class RenderHandler {
 	
 	/**
 	 * 
+	 * @param script
 	 * @param animation
 	 * @param rowIter
 	 * @return
 	 */
-	private int showAnimationSequenceDebugInfo(AnimationSequence animation, int rowIter) {
-		if (animation.getAnimationCount() > 0 && animation.isRunning()) {
-			this.target.fill(animation.getCurrentAnimation().getClass().getSimpleName(), 200, 9 * rowIter, 9, Colors.PURPLE_RED);
-		} else {
-			this.target.fill("None", 200, 9 * rowIter, 9, Colors.PURPLE_RED);
-		}
+	private int showAnimationDebugInfo(AnimationScript script, Animation animation, int rowIter) {
+		this.canvas.fill(animation.getClass().getSimpleName(), 250, 9 * rowIter, 9, (animation.equals(script.getCurrentAnimation()) && script.isRunning() ? Colors.ORANGE_VIBRANT : Colors.BLACK));
+		this.canvas.fill("" + animation.stepLength(), 320, 9 * rowIter, 9, (animation.equals(script.getCurrentAnimation()) && script.isRunning() ? Colors.ORANGE_VIBRANT : Colors.BLACK));
+		this.canvas.fill(animation.toString(), 360, 9 * rowIter++, 9, (animation.equals(script.getCurrentAnimation()) && script.isRunning() ? Colors.ORANGE_VIBRANT : Colors.BLACK));
+		return rowIter;
+	}
+	
+	/**
+	 * 
+	 * @param script
+	 * @param rowIter
+	 * @return
+	 */
+	private int showAnimationScriptDebugInfo(AnimationScript script, int rowIter) {
+		this.canvas.fill(Integer.toHexString(script.hashCode()), 200, 9 * rowIter, 9, Colors.BLACK);
+		this.canvas.fill(script.getLaunchConfiguration().toString(), 250, 9 * rowIter, 9, Colors.BLACK);
+		this.canvas.fill("R: " + script.isRunning() 
+					+ " \tL: " + script.isLooping() 
+					+ " \tC: " + script.hasAttached()
+					+ " \tA: " + script.size() 
+					+ "   \tI: " + (script.getIndex() + 1)
+					+ "     \tT: " + script.getTicks()
+					, 320, 9 * rowIter++, 9, Colors.BLACK);
 		
-		this.target.fill(animation.getLaunchConfiguration().toString(), 250, 9 * rowIter, 9, Colors.GREEN_FOLIAGE);
-		this.target.fill("R: " + animation.isRunning() 
-					+ " \tC: " + animation.onRepeat() 
-					+ " \tA: " + animation.getAnimationCount() 
-					+ "   \tI: " + (animation.getStepIndex() + 1)
-					+ "     \tT: " + animation.getStepCount()
-					, 320, 9 * rowIter++, 9, Colors.GREEN_FOLIAGE);
+		for (Animation animation : script.getAnimations()) {
+			rowIter = showAnimationDebugInfo(script, animation, rowIter);
+		}
 		
 		return rowIter;
 	}
@@ -174,23 +200,27 @@ public class RenderHandler {
 	 * Render all objects in queue
 	 */
 	public void render() {
+		long currentNano = System.nanoTime();
+		this.delta = (currentNano - this.previousNano) / 1_000_000;
+		this.previousNano = currentNano;
+		
 		this.callCount = 0;
 		this.frameCount++;
-		this.target.clear();
+		this.canvas.clear();
 		
-		for (AnimationSequence animation : animations) {
-			animation.update();
+		for (AnimationScript animation : scripts) {
+			animation.invokeUpdate();
 		}
 
 		for (RenderableObject obj : objects) {
-			render(obj);
+			recursionRender(obj);
 		}
 		
-		if (this.debug) {
-			this.target.fill(RENDERER_NAME, 0, 0, 9, Colors.PURPLE_DEEP);
-			this.target.fill("Frames: " + this.frameCount, 200, 0, 9, Colors.RED_DEEP);
-			this.target.fill("Renderer \tQueue: " + objects.size() + "     \tCalls: " + this.callCount, 0, 18, 9, Colors.RED_DEEP);
-			this.target.fill("AnimationSequences \tQueue: " + animations.size(), 200, 18, 9, Colors.RED_DEEP);
+		if (this.showDebugInfo) {
+			this.canvas.fill(RENDERER_NAME, 0, 0, 9, Colors.BLACK);
+			this.canvas.fill("Frame time: " + this.delta + " ms", 200, 0, 9, Colors.RED_DEEP);
+			this.canvas.fill("Renderer \tQueue: " + objects.size() + "     \tCalls: " + this.callCount, 0, 18, 9, Colors.RED_DEEP);
+			this.canvas.fill("Scripts: " + scripts.size(), 200, 18, 9, Colors.RED_DEEP);
 			
 			int rowIter = 4;
 			for (RenderableObject ent : objects) {
@@ -198,8 +228,8 @@ public class RenderHandler {
 			}
 			
 			rowIter = 4;
-			for (AnimationSequence animation : animations) {
-				rowIter = showAnimationSequenceDebugInfo(animation, rowIter);
+			for (AnimationScript animation : scripts) {
+				rowIter = showAnimationScriptDebugInfo(animation, rowIter);
 			}
 		}
 	}
@@ -208,10 +238,10 @@ public class RenderHandler {
 	 * Hierarchical render call of object
 	 * @param obj RenderableEntity to be rendered
 	 */
-	private void render(RenderableObject obj) {
+	private void recursionRender(RenderableObject obj) {
 		if (obj instanceof CompositeObject) {
 			for (RenderableObject sub : ((CompositeObject) obj).getObjects()) {
-				render(sub);
+				recursionRender(sub);
 			}
 		} else {
 			this.callCount++;
@@ -219,12 +249,16 @@ public class RenderHandler {
 				Shape shape = (Shape) obj;
 				
 				if (shape.hasFill()) {
-					this.target.fill(shape);
+					this.canvas.fill(shape);
 				}
 				
 				if (shape.hasStroke()) {
-					this.target.stroke(shape);
+					this.canvas.stroke(shape);
 				}
+			} else if (obj instanceof Sprite) {
+				this.canvas.fill((Sprite) obj); 
+			} else {
+				throw new IllegalArgumentException("Incompatible object: " + obj.getClass().getName());
 			}
 		}
 	}
@@ -234,7 +268,14 @@ public class RenderHandler {
 	 */
 	public void flush() {
 		objects.clear();
-		animations.clear();
+		scripts.clear();
 	}
 	
+	public InputManager requestInputManager() {
+		if (this.input == null) {
+			this.input = new InputManager(this);
+		}
+		
+		return this.input;
+	}
 }

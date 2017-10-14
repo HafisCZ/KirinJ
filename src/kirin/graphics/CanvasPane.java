@@ -88,14 +88,18 @@ public class CanvasPane extends Pane {
 		graphicsContext.fillText(text, x, y + graphicsContext.getFont().getSize());
 	}
 	
+	public void fill(Sprite sprite) {
+		graphicsContext.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+	}
+	
 	/**
 	 * Fill shape
 	 * @param obj	Shape
 	 * @param fillColor	Fill color
 	 */
 	public void fill(Shape obj, Color fillColor) {
-		graphicsContext.setFill(getColor(fillColor));
-		
+		graphicsContext.setFill(getColor(obj.getFill()));
+
 		if (obj instanceof Rectangle) {
 			Rectangle retypedObj = (Rectangle) obj;
 			graphicsContext.fillRect(retypedObj.getX(), retypedObj.getY(), retypedObj.getWidth(), retypedObj.getHeight());
@@ -133,7 +137,7 @@ public class CanvasPane extends Pane {
 			graphicsContext.strokeArc(retypedObj.getX(), retypedObj.getY(), retypedObj.getWidth(), retypedObj.getHeight(), retypedObj.getAngleStart(), retypedObj.getAngleExtent(), ArcType.ROUND);
 		}
 	}
-	
+		
 	/**
 	 * Translate color
 	 * @param color java.awt.Color

@@ -5,14 +5,6 @@ import java.awt.Color;
 public interface RenderableObject {
 
 	/**
-	 * Single draw call for object
-	 * To be used with Canvas.getInstance().fill()
-	 * @return itself
-	 */
-	@Deprecated
-	public RenderableObject draw();
-	
-	/**
 	 * Returns true if object has fill color set
 	 * @return has fill
 	 */

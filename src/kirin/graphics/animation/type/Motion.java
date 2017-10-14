@@ -20,14 +20,22 @@ public class Motion extends Animation {
 	}
 
 	@Override
-	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih) {
+	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih, boolean supressTick) {
 		if (this.time <= this.stepLength) {
 			entity.move(dx, dy);
-			this.time++;
+			if (!supressTick) {
+				this.time++;
+			}
 			return false;
 		} else {
-			this.time = 1;
+			if (!supressTick) {
+				this.time = 1;
+			}
 			return true;
 		}
+	}
+	
+	public String toString() {
+		return "D: " + this.dx + " " + this.dy;
 	}
 }

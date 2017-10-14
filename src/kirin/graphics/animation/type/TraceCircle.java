@@ -16,7 +16,7 @@ public class TraceCircle extends Animation {
 	}
 
 	@Override
-	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih) {
+	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih, boolean supressTick) {
 		double orgX = ix + iw / 2;
 		double orgY = iy + ih / 2;
 		double len = Math.sqrt(Math.pow(cx - orgX, 2) + Math.pow(cy - orgY, 2));
@@ -25,14 +25,22 @@ public class TraceCircle extends Animation {
 		if (this.time <= this.stepLength) {
 			Vec2d vec2 = new Vec2d(vec.angle() + angle / this.stepLength);
 			entity.move((vec.x() - vec2.x()) * (vec.length() - len), (vec.y() - vec2.y()) * (vec.length() - len));
-			this.time++;
+			if (!supressTick) {
+				this.time++;
+			}
 			return false;
 		} else {
 			Vec2d vec2 = new Vec2d(new Vec2d(orgX - cx, orgY - cy).angle() + angle);
 			entity.move((vec.x() - vec2.x()) * (vec.length() - len), (vec.y() - vec2.y()) * (vec.length() - len));
-			this.time = 1;
+			if (!supressTick) {
+				this.time = 1;
+			}
 			return true;
 		}
+	}
+	
+	public String toString() {
+		return "C: " + this.cx + " " + this.cy + " \tA: " + this.angle;
 	}
 
 }

@@ -22,7 +22,7 @@ public abstract class Animation {
 		this.stepLength = stepLength;
 		this.time = 1;
 	}
-	
+
 	/**
 	 * 
 	 * @return Span of action
@@ -40,5 +40,9 @@ public abstract class Animation {
 	 * @param ih	Entity original height
 	 * @return	End of Animation
 	 */
-	public abstract boolean update(EditableObject entity, double ix, double iy, double iw, double ih);
+	public abstract boolean update(EditableObject entity, double ix, double iy, double iw, double ih, boolean supressTick);
+	
+	public String toString() {
+		return "null";
+	}
 }

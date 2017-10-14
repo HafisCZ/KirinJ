@@ -93,15 +93,6 @@ public abstract class Shape implements RenderableObject, EditableObject {
 	public boolean hasStroke() {
 		return this.hasStroke;
 	}
-	
-	/**
-	 * Returns itself
-	 */
-	@Override
-	@Deprecated
-	public Shape draw() {
-		return this;
-	}
 
 	@Override
 	public double getX() {

@@ -14,14 +14,22 @@ public class Delay extends Animation {
 	}
 
 	@Override
-	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih) {
+	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih, boolean supressTick) {
 		if (time > stepLength) {
-			this.time = 1;
+			if (!supressTick) {
+				this.time = 1;
+			}
 			return true;
 		} else {
-			this.time++;
+			if (!supressTick) {
+				this.time++;
+			}
 			return false;
 		}
+	}
+	
+	public String getString() {
+		return "D: " + this.stepLength;
 	}
 
 }

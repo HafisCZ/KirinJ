@@ -23,16 +23,20 @@ public class Scaling extends Animation {
 	}
 
 	@Override
-	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih) {
+	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih, boolean supressTick) {
 		switch (type) {
 			case FAST:
 				if (time > stepLength) {
 					entity.move((iw - w) / 2, (ih - h) / 2);
 					entity.setDimensions(w, h);
-					this.time = 1;
+					if (!supressTick) {
+						this.time = 1;
+					}
 					return true;
 				} else {
-					this.time++;
+					if (!supressTick) {
+						this.time++;
+					}
 					return false;
 				}
 			case SMOOTH:
@@ -40,15 +44,23 @@ public class Scaling extends Animation {
 					entity.move((iw - w) / 2 / stepLength, (ih - h) / 2 / stepLength);
 					entity.setWidth(entity.getWidth() - (ih - h) / stepLength);
 					entity.setHeight(entity.getHeight() - (ih - h) / stepLength);
-					this.time++;
+					if (!supressTick) {
+						this.time++;
+					}
 					return false;
 				} else {
 					entity.setDimensions(w, h);
-					this.time = 1;
+					if (!supressTick) {
+						this.time = 1;
+					}
 					return true;
 				}
 			default:
 				return true;
 		}
+	}
+	
+	public String toString() {
+		return "D: " + this.w + " " + this.h + " \tT: " + this.type.toString();
 	}
 }

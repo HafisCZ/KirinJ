@@ -23,29 +23,41 @@ public class Relocation extends Animation {
 	}
 
 	@Override
-	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih) {
+	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih, boolean supressTick) {
 		switch (type) {
 			case FAST:
 				if (time > stepLength) {
 					entity.setPosition(x, y);
-					this.time = 1;
+					if (!supressTick) {
+						this.time = 1;
+					}
 					return true;
 				} else {
-					this.time++;
+					if (!supressTick) {
+						this.time++;
+					}
 					return false;
 				}
 			case SMOOTH:
 				if (time <= stepLength) {
 					entity.move((x - ix) / stepLength, (y - iy) / stepLength);
-					this.time++;
+					if (!supressTick) {
+						this.time++;
+					}
 					return false;
 				} else {
 					entity.setPosition(x, y);
-					this.time = 1;
+					if (!supressTick) {
+						this.time = 1;
+					}
 					return true;
 				}
 			default:
 				return true;
 		}
+	}
+	
+	public String toString() {
+		return "T: " + this.x + " " + this.y + " \tT: " + this.type.toString();
 	}
 }

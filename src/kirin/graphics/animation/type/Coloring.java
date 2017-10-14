@@ -33,7 +33,7 @@ public class Coloring extends Animation {
 	}
 
 	@Override
-	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih) {
+	public boolean update(EditableObject entity, double ix, double iy, double iw, double ih, boolean supressTick) {
 		if (!(entity instanceof Shape)) {
 			throw new IllegalArgumentException("AnimationSequence.Animation.Coloring compatible only with objects derived from Shape class");
 		}
@@ -45,12 +45,20 @@ public class Coloring extends Animation {
 			if (!this.stroke.equals(null)) {
 				((Shape) entity).setStroke(this.stroke);
 			}
-			this.time = 1;
+			if (!supressTick) {
+				this.time = 1;
+			}
 			return true;
 		} else {
-			this.time++;
+			if (!supressTick) {
+				this.time++;
+			}
 			return false;
 		}		
+	}
+	
+	public String toString() {
+		return "F :" + this.fill.toString() + " \tS: " + this.stroke.toString();
 	}
 
 }

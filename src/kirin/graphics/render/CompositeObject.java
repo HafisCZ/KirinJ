@@ -9,14 +9,6 @@ public interface CompositeObject extends RenderableObject {
 	public RenderableObject[] getObjects();
 	
 	/**
-	 * Returns itself for backward compatibility
-	 */
-	@Deprecated
-	public default RenderableObject draw() {
-		return this;
-	}
-	
-	/**
 	 * Returns width of composite entity
 	 */
 	@Deprecated

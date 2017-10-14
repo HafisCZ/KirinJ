@@ -2,7 +2,6 @@ package kirin.input;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import kirin.graphics.Canvas;
 import kirin.graphics.RenderHandler;
 import kirin.input.adapter.KeyEventAdapter;
 import kirin.input.adapter.MouseEventAdapter;
@@ -18,20 +17,11 @@ public class InputManager {
 	 * @param render RenderHandler
 	 */
 	public InputManager(RenderHandler render) {
-		this(render.getTarget());
+		this.adapter = render.getCanvas().getKeyAdapter();
+		this.mouseAdapter = render.getCanvas().getMouseAdapter();
 	}
 	
-	/**
-	 * 
-	 * @param canvas Canvas
-	 */
-	public InputManager(Canvas canvas) {
-		this.adapter = canvas.getKeyAdapter();
-		this.mouseAdapter = canvas.getMouseAdapter();
-	}
-	
-	/**
-	 * 
+	/** 
 	 * @param key KeyCode
 	 * @return True if keyboard button is held down (continual)
 	 */

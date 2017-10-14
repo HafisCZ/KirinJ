@@ -3,13 +3,14 @@ package kirin.graphics;
 import java.awt.Color;
 
 import javafx.application.Application;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import kirin.graphics.shape.Shape;
 import kirin.input.adapter.KeyEventAdapter;
 import kirin.input.adapter.MouseEventAdapter;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 
 @SuppressWarnings("restriction")
 public class Canvas extends Application implements Runnable {
@@ -18,8 +19,11 @@ public class Canvas extends Application implements Runnable {
 	private String[] args;
 	
 	private CanvasPane canvasPane;
-	private KeyEventAdapter adapter;
+	private KeyEventAdapter keyAdapter;
 	private MouseEventAdapter mouseAdapter;
+	
+	private static double prefWidth = getDefaultWidth();
+	private static double prefHeight = getDefaultHeight();
 	
 	public Canvas() {
 		
@@ -37,23 +41,23 @@ public class Canvas extends Application implements Runnable {
 	@Override
 	public void start(Stage stage) {
 		synchronized (Canvas.class) {
-			canvasPane = new CanvasPane(750, 500);
+			canvasPane = new CanvasPane(prefWidth, prefHeight);
 			canvas = this;
 			
-			adapter = new KeyEventAdapter();
-			mouseAdapter = new MouseEventAdapter();
-			
-			Scene scene = new Scene(canvasPane, canvasPane.getWidth(), canvasPane.getHeight());
-			scene.addEventHandler(KeyEvent.ANY, adapter);
+			Group root = new Group(canvasPane);
+			Scene scene = new Scene(root, canvasPane.getWidth(), canvasPane.getHeight());
+		
+			this.keyAdapter = new KeyEventAdapter();
+			this.mouseAdapter = new MouseEventAdapter();
+			scene.addEventHandler(KeyEvent.ANY, keyAdapter);
 			scene.addEventHandler(MouseEvent.ANY, mouseAdapter);
-
+			
 			stage.setScene(scene);
 			stage.sizeToScene();
 			stage.setResizable(false);
 			
-			stage.setTitle("KirinJ V01.B005");
+			stage.setTitle("KirinJ");
 			stage.requestFocus();
-			
 			stage.show();
 			
 			Canvas.class.notifyAll();
@@ -73,11 +77,24 @@ public class Canvas extends Application implements Runnable {
 		}
 	}
 	
+	public static double getDefaultWidth() {
+		return 750;
+	}
+	
+	public static double getDefaultHeight() {
+		return 500;
+	}
+	
+	public static void requestResolution(double width, double height) {
+		prefWidth = width;
+		prefHeight = height;
+	}
+	
 	/**
 	 * Get existing instance of canvas or create new
 	 * @return Instance
 	 */
-	public static Canvas getInstance() {
+	protected static Canvas getInstance() {
 		if (canvas == null) {
 			launchAsync();
 		}
@@ -89,7 +106,7 @@ public class Canvas extends Application implements Runnable {
 	 * @return Attached KeyAdapter
 	 */
 	public KeyEventAdapter getKeyAdapter() {
-		return this.adapter;
+		return this.keyAdapter;
 	}
 	
 	/**
@@ -107,7 +124,7 @@ public class Canvas extends Application implements Runnable {
 	public void setBackgroundColor(Color color) {
 		canvasPane.setBackgroundColor(color);
 	}
-	
+
 	/**
 	 * Get background color of canvas
 	 * @return Background color
@@ -149,6 +166,14 @@ public class Canvas extends Application implements Runnable {
 	 */
 	public void stroke(Shape obj) {
 		canvasPane.stroke(obj);
+	}
+	
+	/**
+	 * 
+	 * @param sprite
+	 */
+	public void fill(Sprite sprite) {
+		canvasPane.fill(sprite);
 	}
 	
 	/**
