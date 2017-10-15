@@ -2,12 +2,11 @@ package kirin.graphics;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcType;
@@ -18,36 +17,23 @@ import kirin.graphics.shape.Ellipse;
 import kirin.graphics.shape.Rectangle;
 import kirin.graphics.shape.Shape;
 import kirin.graphics.shape.Triangle;
-import kirin.input.adapter.KeyEventAdapter;
-import kirin.input.adapter.MouseEventAdapter;
+import kirin.input.adapter.EventAdapter;
 
-public class Canvas extends Application implements Runnable {
+public class Canvas extends Application {
 	
 	private static Canvas canvas;
-	private String[] args;
-	
+
 	private Group root;
 	private javafx.scene.canvas.Canvas fxCanvas;
 	private GraphicsContext fxContext;
-	private KeyEventAdapter keyAdapter;
-	private MouseEventAdapter mouseAdapter;
+	private EventAdapter adapter = null;
 	
 	private static double prefWidth = getDefaultWidth();
 	private static double prefHeight = getDefaultHeight();
 	
-	public Canvas() {
-		
-	}
-	
-	public Canvas(String[] args) {
-		this.args = args;
-	}
-	
-	@Override
-	public void run() {
-		launch(args);
-	}
-	
+	/**
+	 * 
+	 */
 	@Override
 	public void start(Stage stage) {
 		synchronized (Canvas.class) {
@@ -59,10 +45,7 @@ public class Canvas extends Application implements Runnable {
 			root = new Group(fxCanvas);
 			Scene scene = new Scene(root, prefWidth, prefHeight);
 			
-			this.keyAdapter = new KeyEventAdapter();
-			this.mouseAdapter = new MouseEventAdapter();
-			scene.addEventHandler(KeyEvent.ANY, keyAdapter);
-			scene.addEventHandler(MouseEvent.ANY, mouseAdapter);
+			scene.addEventHandler(Event.ANY, requestEventAdapter());
 			
 			stage.setTitle("KirinJ");
 			stage.setScene(scene);
@@ -79,8 +62,12 @@ public class Canvas extends Application implements Runnable {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void launchAsync(String... args) {
-		new Thread(new Canvas(args)).start();
+		new Thread(() -> launch(args)).start();
 		synchronized (Canvas.class) {
 			while (canvas == null) {
 				try {
@@ -92,14 +79,27 @@ public class Canvas extends Application implements Runnable {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public static double getDefaultWidth() {
 		return 750;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public static double getDefaultHeight() {
 		return 500;
 	}
 	
+	/**
+	 * 
+	 * @param width
+	 * @param height
+	 */
 	public static void requestResolution(double width, double height) {
 		prefWidth = width;
 		prefHeight = height;
@@ -117,24 +117,13 @@ public class Canvas extends Application implements Runnable {
 	}
 	
 	/**
-	 * Get attached key adapter
-	 * @return Attached KeyAdapter
-	 */
-	public KeyEventAdapter getKeyAdapter() {
-		return this.keyAdapter;
-	}
-	
-	/**
 	 * 
 	 * @param nodes
 	 */
 	public void removeNode(Node... nodes) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				for (Node node : nodes) {
-					root.getChildren().remove(node);
-				}
+		Platform.runLater(() -> {
+			for (Node node : nodes) {
+				root.getChildren().remove(node);
 			}
 		});
 	}
@@ -144,24 +133,35 @@ public class Canvas extends Application implements Runnable {
 	 * @param nodes
 	 */
 	public void addNode(Node... nodes) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				for (Node node : nodes) {
-					root.getChildren().add(node);
-				}
+		Platform.runLater(() -> {
+			for (Node node : nodes) {
+				root.getChildren().add(node);
 			}
 		});
 	}
 	
 	/**
-	 * Get attached mouse adapter
-	 * @return Attached MouseAdapter
+	 * 
+	 * @param nodes
 	 */
-	public MouseEventAdapter getMouseAdapter() {
-		return this.mouseAdapter;
+	public void addGroup(Node... nodes) {
+		Platform.runLater(() -> {
+			root.getChildren().add(new Group(nodes));
+		});
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public EventAdapter requestEventAdapter() {
+		if (this.adapter == null) {
+			this.adapter = new EventAdapter();
+		}
+		
+		return this.adapter;
+	}
+	
 	/**
 	 * Clear canvas
 	 */

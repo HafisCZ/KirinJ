@@ -166,9 +166,9 @@ public class RenderHandler {
 	 * @return
 	 */
 	private int showTransitionDebugInfo(TransitionScript script, Transition transition, int rowIter) {
-		this.canvas.fill(transition.getClass().getSimpleName(), 250, 9 * rowIter, 9, (transition.equals(script.getCurrentAnimation()) && script.isRunning() ? Color.BLUEVIOLET : Color.BLACK));
-		this.canvas.fill("" + transition.stepLength(), 320, 9 * rowIter, 9, (transition.equals(script.getCurrentAnimation()) && script.isRunning() ? Color.BLUEVIOLET : Color.BLACK));
-		this.canvas.fill(transition.toString(), 360, 9 * rowIter++, 9, (transition.equals(script.getCurrentAnimation()) && script.isRunning() ? Color.BLUEVIOLET : Color.BLACK));
+		this.canvas.fill(transition.getClass().getSimpleName(), 250, 9 * rowIter, 9, (transition.equals(script.getCurrentAnimation()) && script.isRunningIsolated() ? Color.BLUEVIOLET : Color.BLACK));
+		this.canvas.fill("" + transition.stepLength(), 320, 9 * rowIter, 9, (transition.equals(script.getCurrentAnimation()) && script.isRunningIsolated() ? Color.BLUEVIOLET : Color.BLACK));
+		this.canvas.fill(transition.toString(), 360, 9 * rowIter++, 9, (transition.equals(script.getCurrentAnimation()) && script.isRunningIsolated() ? Color.BLUEVIOLET : Color.BLACK));
 		return rowIter;
 	}
 	

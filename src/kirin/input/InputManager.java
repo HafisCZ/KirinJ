@@ -3,21 +3,18 @@ package kirin.input;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import kirin.graphics.RenderHandler;
-import kirin.input.adapter.KeyEventAdapter;
-import kirin.input.adapter.MouseEventAdapter;
+import kirin.input.adapter.EventAdapter;
 
 public class InputManager {
 	
-	private KeyEventAdapter adapter;
-	private MouseEventAdapter mouseAdapter;
+	private EventAdapter adapter;
 	
 	/**
 	 * 
 	 * @param render RenderHandler
 	 */
 	public InputManager(RenderHandler render) {
-		this.adapter = render.getCanvas().getKeyAdapter();
-		this.mouseAdapter = render.getCanvas().getMouseAdapter();
+		this.adapter = render.getCanvas().requestEventAdapter();
 	}
 	
 	/** 
@@ -43,7 +40,7 @@ public class InputManager {
 	 * @return True if mouse button is held down (continual)
 	 */
 	public boolean isMouseButtonHeld(MouseButton key) {
-		return mouseAdapter.isHeld(key);
+		return adapter.isHeld(key);
 	}
 
 	/**
@@ -52,7 +49,7 @@ public class InputManager {
 	 * @return True if mouse button is pressed (on click / release only once)
 	 */
 	public boolean isMouseButtonPressed(MouseButton key) {
-		return mouseAdapter.isPressed(key);
+		return adapter.isPressed(key);
 	}
 
 	/**
@@ -60,7 +57,7 @@ public class InputManager {
 	 * @return Current mouse y coordinate
 	 */
 	public double getMouseX() {
-		return mouseAdapter.getX();
+		return adapter.getX();
 	}
 	
 	/**
@@ -68,15 +65,14 @@ public class InputManager {
 	 * @return Current mouse y coordinate
 	 */
 	public double getMouseY() {
-		return mouseAdapter.getY();
+		return adapter.getY();
 	}
 
 	/**
 	 * Update adapters
 	 */
-	public void updateAdapters() {
+	public void update() {
 		this.adapter.update();
-		this.mouseAdapter.update();
 	}
 	
 }

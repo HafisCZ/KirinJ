@@ -13,7 +13,7 @@ public class TransitionScript {
 
 	private List<TransitionScript> attached = new ArrayList<TransitionScript>();
 	private EditableObject[] objects;
-	private Transition[] animations;
+	private Transition[] transitions;
 	private double[][] data;
 	
 	private int tick = 1, animation = 0;
@@ -40,7 +40,7 @@ public class TransitionScript {
 	 */
 	public TransitionScript(EditableObject[] objects, Transition[] animations, boolean looping, Launch launch) {
 		this.objects = objects;
-		this.animations = animations;
+		this.transitions = animations;
 		
 		this.looping = looping;
 		this.launch = launch;
@@ -111,6 +111,14 @@ public class TransitionScript {
 	 * True if AnimationSequence is running
 	 */
 	public boolean isRunning() {
+		return this.running | isAnyAttachedRunning();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isRunningIsolated() {
 		return this.running;
 	}
 	
@@ -126,14 +134,14 @@ public class TransitionScript {
 	 * @return Current animation
 	 */
 	public Transition getCurrentAnimation() {
-		return this.animations[this.animation];
+		return this.transitions[this.animation];
 	}
 	
 	/**
 	 * Start AnimationSequence which was created with ON_DEMAND launch option
 	 */
 	public void execute() {
-		if (!this.running && this.launch.equals(Launch.ON_DEMAND)) {
+		if (!isRunning() && this.launch.equals(Launch.ON_DEMAND)) {
 			this.running = true;
 		}
 	}
@@ -149,7 +157,7 @@ public class TransitionScript {
 	 * Update current Animation
 	 */
 	public void invokeUpdate() {
-		if (animation >= animations.length) {
+		if (animation >= transitions.length) {
 			animation = 0;
 			tick = 1;
 			if (!isLooping()) {
@@ -161,10 +169,10 @@ public class TransitionScript {
 			}
 		}
 		
-		if (animation < animations.length && this.running) {
+		if (animation < transitions.length && this.running) {
 			boolean advance = false;
 			for (int i = 0; i < objects.length; i++) {
-				advance |= animations[animation].update(objects[i], data[i][0], data[i][1], data[i][2], data[i][3], i < objects.length - 1);
+				advance |= transitions[animation].update(objects[i], data[i][0], data[i][1], data[i][2], data[i][3], i < objects.length - 1);
 			}
 			
 			if (advance) {
@@ -181,7 +189,7 @@ public class TransitionScript {
 	 * Count of Animations
 	 */
 	public int size() {
-		return this.animations.length;
+		return this.transitions.length;
 	}
 	
 	/**
@@ -211,6 +219,21 @@ public class TransitionScript {
 	 * @return
 	 */
 	public Transition[] getAnimations() {
-		return this.animations;
+		return this.transitions;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isAnyAttachedRunning() {
+		boolean running = false;
+		for (TransitionScript script : attached) {
+			running |= script.isRunning();
+			if (script.hasAttached()) {
+				running |= script.isAnyAttachedRunning();
+			}
+		}
+		return running;
 	}
 }
