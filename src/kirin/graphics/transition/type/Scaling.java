@@ -1,24 +1,24 @@
-package kirin.graphics.animation.type;
+package kirin.graphics.transition.type;
 
-import kirin.graphics.animation.Animation;
 import kirin.graphics.render.EditableObject;
+import kirin.graphics.transition.Transition;
 
-public class Relocation extends Animation {
+public class Scaling extends Transition {
 	
-	private double x, y;
+	private double w, h;
 	private TransitionType type;
 	
 	/**
 	 * 
-	 * @param x	Target x
-	 * @param y	Target y
+	 * @param w	Target width
+	 * @param h	Target height
 	 * @param stepLength	Span of action
-	 * @param type	Type of transition
+	 * @param type Type of transition
 	 */
-	public Relocation(double x, double y, int stepLength, TransitionType type) {
+	public Scaling(double w, double h, int stepLength, TransitionType type) {
 		super(stepLength);
-		this.x = x;
-		this.y = y;
+		this.w = w;
+		this.h = h;
 		this.type = type;
 	}
 
@@ -27,7 +27,8 @@ public class Relocation extends Animation {
 		switch (type) {
 			case FAST:
 				if (time > stepLength) {
-					entity.setPosition(x, y);
+					entity.move((iw - w) / 2, (ih - h) / 2);
+					entity.setDimensions(w, h);
 					if (!supressTick) {
 						this.time = 1;
 					}
@@ -40,13 +41,15 @@ public class Relocation extends Animation {
 				}
 			case SMOOTH:
 				if (time <= stepLength) {
-					entity.move((x - ix) / stepLength, (y - iy) / stepLength);
+					entity.move((iw - w) / 2 / stepLength, (ih - h) / 2 / stepLength);
+					entity.setWidth(entity.getWidth() - (ih - h) / stepLength);
+					entity.setHeight(entity.getHeight() - (ih - h) / stepLength);
 					if (!supressTick) {
 						this.time++;
 					}
 					return false;
 				} else {
-					entity.setPosition(x, y);
+					entity.setDimensions(w, h);
 					if (!supressTick) {
 						this.time = 1;
 					}
@@ -58,6 +61,6 @@ public class Relocation extends Animation {
 	}
 	
 	public String toString() {
-		return "T: " + this.x + " " + this.y + " \tT: " + this.type.toString();
+		return "D: " + this.w + " " + this.h + " \tT: " + this.type.toString();
 	}
 }

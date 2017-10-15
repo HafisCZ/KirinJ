@@ -1,19 +1,19 @@
-package kirin.graphics.animation;
+package kirin.graphics.transition;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import kirin.graphics.render.EditableObject;
 
-public class AnimationScript {
+public class TransitionScript {
 	
 	public static enum Launch {
 		ON_DEMAND, AUTO
 	}
 
-	private List<AnimationScript> attached = new ArrayList<AnimationScript>();
+	private List<TransitionScript> attached = new ArrayList<TransitionScript>();
 	private EditableObject[] objects;
-	private Animation[] animations;
+	private Transition[] animations;
 	private double[][] data;
 	
 	private int tick = 1, animation = 0;
@@ -27,7 +27,7 @@ public class AnimationScript {
 	 * @param repeat	Repeat forever
 	 * @param launch	Type of launch
 	 */
-	public AnimationScript(EditableObject object, Animation[] animations, boolean looping, Launch launch) {
+	public TransitionScript(EditableObject object, Transition[] animations, boolean looping, Launch launch) {
 		this(new EditableObject[] { object }, animations, looping, launch);
 	}
 	
@@ -38,7 +38,7 @@ public class AnimationScript {
 	 * @param repeat	Repeat forever
 	 * @param launch	Type of launch
 	 */
-	public AnimationScript(EditableObject[] objects, Animation[] animations, boolean looping, Launch launch) {
+	public TransitionScript(EditableObject[] objects, Transition[] animations, boolean looping, Launch launch) {
 		this.objects = objects;
 		this.animations = animations;
 		
@@ -72,7 +72,7 @@ public class AnimationScript {
 	 * @param seq	AnimationSequence
 	 * @return
 	 */
-	public boolean detach(AnimationScript seq) {
+	public boolean detach(TransitionScript seq) {
 		return this.attached.remove(seq);
 	}
 	
@@ -80,7 +80,7 @@ public class AnimationScript {
 	 * Attach animation after end of this one
 	 * @param seq	AnimationSequence
 	 */
-	public void attach(AnimationScript seq) {
+	public void attach(TransitionScript seq) {
 		if (this.looping || seq.launch.equals(Launch.AUTO)) {
 			throw new IllegalArgumentException();
 		}
@@ -125,7 +125,7 @@ public class AnimationScript {
 	 * 
 	 * @return Current animation
 	 */
-	public Animation getCurrentAnimation() {
+	public Transition getCurrentAnimation() {
 		return this.animations[this.animation];
 	}
 	
@@ -154,7 +154,7 @@ public class AnimationScript {
 			tick = 1;
 			if (!isLooping()) {
 				this.running = false;
-				for (AnimationScript seq : attached) {
+				for (TransitionScript seq : attached) {
 					seq.execute();
 					seq.invokeUpdate();
 				}
@@ -210,7 +210,7 @@ public class AnimationScript {
 	 * 
 	 * @return
 	 */
-	public Animation[] getAnimations() {
+	public Transition[] getAnimations() {
 		return this.animations;
 	}
 }

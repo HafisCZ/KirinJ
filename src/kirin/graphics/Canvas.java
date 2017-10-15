@@ -1,24 +1,34 @@
 package kirin.graphics;
 
-import java.awt.Color;
-
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.ArcType;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import kirin.graphics.shape.Arc;
+import kirin.graphics.shape.Ellipse;
+import kirin.graphics.shape.Rectangle;
 import kirin.graphics.shape.Shape;
+import kirin.graphics.shape.Triangle;
 import kirin.input.adapter.KeyEventAdapter;
 import kirin.input.adapter.MouseEventAdapter;
 
-@SuppressWarnings("restriction")
 public class Canvas extends Application implements Runnable {
 	
 	private static Canvas canvas;
 	private String[] args;
 	
-	private CanvasPane canvasPane;
+	private Group root;
+	private javafx.scene.canvas.Canvas fxCanvas;
+	private GraphicsContext fxContext;
 	private KeyEventAdapter keyAdapter;
 	private MouseEventAdapter mouseAdapter;
 	
@@ -41,23 +51,28 @@ public class Canvas extends Application implements Runnable {
 	@Override
 	public void start(Stage stage) {
 		synchronized (Canvas.class) {
-			canvasPane = new CanvasPane(prefWidth, prefHeight);
+			fxCanvas = new javafx.scene.canvas.Canvas(prefWidth, prefHeight);
+			fxContext = fxCanvas.getGraphicsContext2D();
+			
 			canvas = this;
 			
-			Group root = new Group(canvasPane);
-			Scene scene = new Scene(root, canvasPane.getWidth(), canvasPane.getHeight());
-		
+			root = new Group(fxCanvas);
+			Scene scene = new Scene(root, prefWidth, prefHeight);
+			
 			this.keyAdapter = new KeyEventAdapter();
 			this.mouseAdapter = new MouseEventAdapter();
 			scene.addEventHandler(KeyEvent.ANY, keyAdapter);
 			scene.addEventHandler(MouseEvent.ANY, mouseAdapter);
 			
+			stage.setTitle("KirinJ");
 			stage.setScene(scene);
 			stage.sizeToScene();
-			stage.setResizable(false);
 			
-			stage.setTitle("KirinJ");
+			stage.setResizable(false);
+			stage.setAlwaysOnTop(true);
 			stage.requestFocus();
+			stage.show();
+
 			stage.show();
 			
 			Canvas.class.notifyAll();
@@ -110,62 +125,72 @@ public class Canvas extends Application implements Runnable {
 	}
 	
 	/**
+	 * 
+	 * @param nodes
+	 */
+	public void removeNode(Node... nodes) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				for (Node node : nodes) {
+					root.getChildren().remove(node);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * 
+	 * @param nodes
+	 */
+	public void addNode(Node... nodes) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				for (Node node : nodes) {
+					root.getChildren().add(node);
+				}
+			}
+		});
+	}
+	
+	/**
 	 * Get attached mouse adapter
 	 * @return Attached MouseAdapter
 	 */
 	public MouseEventAdapter getMouseAdapter() {
 		return this.mouseAdapter;
 	}
-	
-	/**
-	 * Set background color of canvas
-	 * @param color Background color
-	 */
-	public void setBackgroundColor(Color color) {
-		canvasPane.setBackgroundColor(color);
-	}
-
-	/**
-	 * Get background color of canvas
-	 * @return Background color
-	 */
-	public Color getBackgroundColor() {
-		return canvasPane.getBackgroundColor();
-	}
 
 	/**
 	 * Clear canvas
 	 */
 	public void clear() {
-		canvasPane.clear();
+		fxContext.setFill(Color.WHITE);
+		fxContext.fillRect(0, 0, prefWidth, prefHeight);
+	}
+
+	/**
+	 * 
+	 * @param text
+	 * @param x
+	 * @param y
+	 * @param size
+	 * @param color
+	 */
+	public void fill(String text, double x, double y, double size, Color color) {
+		fxContext.setFill(color);
+		fxContext.setFont(new Font("arial", size));
+		fxContext.fillText(text, x, y + size);
 	}
 	
 	/**
-	 * Draw text onto canvas
-	 * @param text	Text to be drawn
-	 * @param x	Top left x
-	 * @param y	Top left y
-	 * @param size	Text size
-	 * @param fill	Text color
+	 * 
+	 * @param color
+	 * @return
 	 */
-	public void fill(String text, double x, double y, int size, Color fill) {
-		canvasPane.fill(text, x, y, size, fill);
-	}
-	
-	/**
-	 * Fill shape
-	 * @param obj	Shape
-	 */
-	public void fill(Shape obj) {
-		canvasPane.fill(obj);
-	}
-	
-	/**
-	 * Stroke shape
-	 * @param obj	Shape
-	 */
-	public void stroke(Shape obj) {
-		canvasPane.stroke(obj);
+	public static Paint getColor(java.awt.Color color) {
+		return javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0);
 	}
 	
 	/**
@@ -173,22 +198,59 @@ public class Canvas extends Application implements Runnable {
 	 * @param sprite
 	 */
 	public void fill(Sprite sprite) {
-		canvasPane.fill(sprite);
+		fxContext.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
 	}
 	
 	/**
 	 * 
-	 * @return Canvas width
+	 * @param obj
 	 */
+	public void fill(Shape obj) {
+		fxContext.setFill(obj.hasFill() ? obj.getFill() : Color.BLACK);
+
+		if (obj instanceof Rectangle) {
+			Rectangle retypedObj = (Rectangle) obj;
+			fxContext.fillRect(retypedObj.getX(), retypedObj.getY(), retypedObj.getWidth(), retypedObj.getHeight());
+		} else if (obj instanceof Triangle) {
+			double[][] points = ((Triangle) obj).getVertices();
+			fxContext.fillPolygon(points[0], points[1], points[0].length);
+		} else if (obj instanceof Ellipse) {
+			Ellipse retypedObj = (Ellipse) obj;
+			fxContext.fillOval(retypedObj.getX(), retypedObj.getY(), retypedObj.getWidth(), retypedObj.getHeight());
+		} else if (obj instanceof Arc) {
+			Arc retypedObj = (Arc) obj;
+			fxContext.fillArc(retypedObj.getX(), retypedObj.getY(), retypedObj.getWidth(), retypedObj.getHeight(), retypedObj.getAngleStart(), retypedObj.getAngleExtent(), ArcType.ROUND);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param obj
+	 */
+	public void stroke(Shape obj) {
+		fxContext.setStroke(obj.hasStroke() ? obj.getStroke() : Color.BLACK);
+		
+		if (obj instanceof Rectangle) {
+			Rectangle retypedObj = (Rectangle) obj;
+			fxContext.strokeRect(retypedObj.getX(), retypedObj.getY(), retypedObj.getWidth(), retypedObj.getHeight());
+		} else if (obj instanceof Triangle) {
+			double[][] points = ((Triangle) obj).getVertices();
+			fxContext.strokePolygon(points[0], points[1], points[0].length);
+		} else if (obj instanceof Ellipse) {
+			Ellipse retypedObj = (Ellipse) obj;
+			fxContext.strokeOval(retypedObj.getX(), retypedObj.getY(), retypedObj.getWidth(), retypedObj.getHeight());
+		} else if (obj instanceof Arc) {
+			Arc retypedObj = (Arc) obj;
+			fxContext.strokeArc(retypedObj.getX(), retypedObj.getY(), retypedObj.getWidth(), retypedObj.getHeight(), retypedObj.getAngleStart(), retypedObj.getAngleExtent(), ArcType.ROUND);
+		}
+	}
+	
 	public double getWidth() {
-		return canvasPane.getWidth();
+		return prefWidth;
 	}
 	
-	/**
-	 * 
-	 * @return Canvas height
-	 */
+
 	public double getHeight() {
-		return canvasPane.getHeight();
+		return prefHeight;
 	}
 }

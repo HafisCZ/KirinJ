@@ -7,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 
-@SuppressWarnings("restriction")
 public class KeyEventAdapter implements EventHandler<KeyEvent> {
 
 	private Map<KeyCode, Boolean> keyMap = new HashMap<KeyCode, Boolean>();

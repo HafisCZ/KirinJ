@@ -1,9 +1,9 @@
-package kirin.graphics.animation.type;
+package kirin.graphics.transition.type;
 
-import kirin.graphics.animation.Animation;
 import kirin.graphics.render.EditableObject;
+import kirin.graphics.transition.Transition;
 
-public class Delay extends Animation {
+public class Delay extends Transition {
 
 	/**
 	 * 

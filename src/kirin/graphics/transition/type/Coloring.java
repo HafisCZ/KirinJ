@@ -1,12 +1,11 @@
-package kirin.graphics.animation.type;
+package kirin.graphics.transition.type;
 
-import java.awt.Color;
-
-import kirin.graphics.animation.Animation;
+import javafx.scene.paint.Color;
 import kirin.graphics.render.EditableObject;
 import kirin.graphics.shape.Shape;
+import kirin.graphics.transition.Transition;
 
-public class Coloring extends Animation {
+public class Coloring extends Transition {
 
 	public Color fill, stroke;
 	

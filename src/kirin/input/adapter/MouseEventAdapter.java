@@ -7,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.MouseButton;
 
-@SuppressWarnings("restriction")
 public class MouseEventAdapter implements EventHandler<MouseEvent> {
 
 	private double x = 0, y = 0;

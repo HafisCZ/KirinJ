@@ -1,24 +1,24 @@
-package kirin.graphics.animation.type;
+package kirin.graphics.transition.type;
 
-import kirin.graphics.animation.Animation;
 import kirin.graphics.render.EditableObject;
+import kirin.graphics.transition.Transition;
 
-public class Scaling extends Animation {
+public class LinePath extends Transition {
 	
-	private double w, h;
+	private double x, y;
 	private TransitionType type;
 	
 	/**
 	 * 
-	 * @param w	Target width
-	 * @param h	Target height
+	 * @param x	Target x
+	 * @param y	Target y
 	 * @param stepLength	Span of action
-	 * @param type Type of transition
+	 * @param type	Type of transition
 	 */
-	public Scaling(double w, double h, int stepLength, TransitionType type) {
+	public LinePath(double x, double y, int stepLength, TransitionType type) {
 		super(stepLength);
-		this.w = w;
-		this.h = h;
+		this.x = x;
+		this.y = y;
 		this.type = type;
 	}
 
@@ -27,8 +27,7 @@ public class Scaling extends Animation {
 		switch (type) {
 			case FAST:
 				if (time > stepLength) {
-					entity.move((iw - w) / 2, (ih - h) / 2);
-					entity.setDimensions(w, h);
+					entity.setPosition(x, y);
 					if (!supressTick) {
 						this.time = 1;
 					}
@@ -41,15 +40,13 @@ public class Scaling extends Animation {
 				}
 			case SMOOTH:
 				if (time <= stepLength) {
-					entity.move((iw - w) / 2 / stepLength, (ih - h) / 2 / stepLength);
-					entity.setWidth(entity.getWidth() - (ih - h) / stepLength);
-					entity.setHeight(entity.getHeight() - (ih - h) / stepLength);
+					entity.move((x - ix) / stepLength, (y - iy) / stepLength);
 					if (!supressTick) {
 						this.time++;
 					}
 					return false;
 				} else {
-					entity.setDimensions(w, h);
+					entity.setPosition(x, y);
 					if (!supressTick) {
 						this.time = 1;
 					}
@@ -61,6 +58,6 @@ public class Scaling extends Animation {
 	}
 	
 	public String toString() {
-		return "D: " + this.w + " " + this.h + " \tT: " + this.type.toString();
+		return "T: " + this.x + " " + this.y + " \tT: " + this.type.toString();
 	}
 }

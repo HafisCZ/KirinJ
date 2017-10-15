@@ -6,7 +6,6 @@ import kirin.graphics.RenderHandler;
 import kirin.input.adapter.KeyEventAdapter;
 import kirin.input.adapter.MouseEventAdapter;
 
-@SuppressWarnings("restriction")
 public class InputManager {
 	
 	private KeyEventAdapter adapter;

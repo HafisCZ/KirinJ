@@ -1,8 +1,8 @@
-package kirin.graphics.animation;
+package kirin.graphics.transition;
 
 import kirin.graphics.render.EditableObject;
 
-public abstract class Animation {
+public abstract class Transition {
 	
 	/**
 	 *	Transition type
@@ -18,7 +18,7 @@ public abstract class Animation {
 	 * 
 	 * @param stepLength	Span of action
 	 */
-	protected Animation(int stepLength) {
+	protected Transition(int stepLength) {
 		this.stepLength = stepLength;
 		this.time = 1;
 	}

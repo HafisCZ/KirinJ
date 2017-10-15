@@ -1,14 +1,14 @@
-package kirin.graphics.animation.type;
+package kirin.graphics.transition.type;
 
-import kirin.graphics.animation.Animation;
 import kirin.graphics.render.EditableObject;
-import kirin.util.math.Vec2d;
+import kirin.graphics.transition.Transition;
+import kirin.util.Vec2d;
 
-public class TraceCircle extends Animation {
+public class CirclePath extends Transition {
 
 	private double cx, cy, angle;
 	
-	public TraceCircle(double cx, double cy, double angle, int stepLength) {
+	public CirclePath(double cx, double cy, double angle, int stepLength) {
 		super(stepLength);
 		this.cx = cx;
 		this.cy = cy;

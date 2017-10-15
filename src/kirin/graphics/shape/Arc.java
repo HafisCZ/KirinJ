@@ -1,8 +1,8 @@
 package kirin.graphics.shape;
 
-import java.awt.Color;
-
-import kirin.util.math.Direction;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import kirin.util.Direction;
 
 public class Arc extends Shape {
 	
@@ -60,5 +60,11 @@ public class Arc extends Shape {
 	 */
 	public double getAngleExtent() {
 		return angle;
+	}
+
+	@Override
+	public Node getUnderlayingNode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

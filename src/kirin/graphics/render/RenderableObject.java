@@ -1,6 +1,6 @@
 package kirin.graphics.render;
 
-import java.awt.Color;
+import javafx.scene.paint.Color;
 
 public interface RenderableObject {
 

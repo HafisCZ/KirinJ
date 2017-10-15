@@ -1,7 +1,7 @@
 package kirin.graphics.shape;
 
-import java.awt.Color;
-
+import javafx.scene.paint.Color;
+import javafx.scene.Node;
 import kirin.graphics.render.EditableObject;
 import kirin.graphics.render.RenderableObject;
 
@@ -55,6 +55,12 @@ public abstract class Shape implements RenderableObject, EditableObject {
 		this.strokeColor = stroke;
 		this.hasStroke = true;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract Node getUnderlayingNode();
 	
 	/**
 	 * Set fill color of shape

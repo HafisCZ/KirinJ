@@ -1,8 +1,8 @@
 package kirin.graphics.shape;
 
-import java.awt.Color;
-
-import kirin.util.math.Direction;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import kirin.util.Direction;
 
 public class Triangle extends Shape {
 
@@ -116,5 +116,11 @@ public class Triangle extends Shape {
 	    }
 	    
 	    return new double[][]{xPoints, yPoints};
+	}
+
+	@Override
+	public Node getUnderlayingNode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

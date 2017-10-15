@@ -1,9 +1,9 @@
-package kirin.graphics.animation.type;
+package kirin.graphics.transition.type;
 
-import kirin.graphics.animation.Animation;
 import kirin.graphics.render.EditableObject;
+import kirin.graphics.transition.Transition;
 
-public class Motion extends Animation {
+public class Direction extends Transition {
 	
 	private double dx, dy;
 	
@@ -13,7 +13,7 @@ public class Motion extends Animation {
 	 * @param dy	y of vector
 	 * @param stepLength	Span of action
 	 */
-	public Motion(double dx, double dy, int stepLength) {
+	public Direction(double dx, double dy, int stepLength) {
 		super(stepLength);
 		this.dx = dx;
 		this.dy = dy;

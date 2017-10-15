@@ -4,7 +4,6 @@ import javafx.scene.image.Image;
 import kirin.graphics.render.EditableObject;
 import kirin.graphics.render.RenderableObject;
 
-@SuppressWarnings("restriction")
 public class Sprite implements RenderableObject, EditableObject {
 
 	private double x, y, width, height;

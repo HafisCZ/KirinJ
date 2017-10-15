@@ -1,6 +1,7 @@
 package kirin.graphics.shape;
 
-import java.awt.Color;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 public class Ellipse extends Shape {
   
@@ -48,5 +49,11 @@ public class Ellipse extends Shape {
 	 */
 	public Ellipse(double x, double y, double height, double width, Color fill, Color stroke) {
 		super(x, y, width, height, fill, stroke);
+	}
+
+	@Override
+	public Node getUnderlayingNode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
